@@ -1,0 +1,29 @@
+main: de.theniclas.bauplugin.main.Main
+depend: [PermissionsEx]
+softdepend: [WorldEdit, goBrush, goPaint, ArmorStandTools, VoxelSniper]
+name: Bauserver
+author: nvclas
+version: 1.5b
+
+commands:
+   gm:
+   speed:
+   blocks:
+   tools:
+   fly:
+   worlds:
+      aliases: [w]
+   trust:
+   untrust:
+   tpa:
+   tpaccept:
+   ping:
+   addspawn:
+   globalspawn:
+   spawn:
+   visibility:
+   prepare:
+   worldlock:
+   wkick:
+   trusted:
+   setowner:
