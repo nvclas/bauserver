@@ -1,0 +1,16 @@
+[versions]
+annotations = "26.0.1"
+lombok = "1.18.36"
+runPaper = "2.3.1"
+paperweightUserdev = "2.0.0-beta.14"
+paper = "1.21.1-R0.1-SNAPSHOT"
+luckperms = "5.4"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+luckperms = { group = "net.luckperms", name = "api", version.ref = "luckperms" }
+
+[plugins]
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweightUserdev" }
