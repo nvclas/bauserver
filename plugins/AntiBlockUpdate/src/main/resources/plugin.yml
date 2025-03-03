@@ -1,0 +1,10 @@
+name: AntiBlockUpdate
+version: '${version}'
+main: de.nvclas.tokyobuild.abu.AntiBlockUpdate
+api-version: '1.13'
+authors: [nvclas]
+description: Erlaubt das Deaktivieren von Blockphysiken
+
+commands:
+  abu:
+    description: Aktiviere und deaktiviere Blockphysiken

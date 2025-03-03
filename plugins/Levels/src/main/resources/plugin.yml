@@ -1,0 +1,12 @@
+name: Levels
+version: '${version}'
+main: de.nvclas.tokyobuild.levels.main.Main
+api-version: '1.13'
+authors: [ nvclas ]
+description: Level-Addon für das BauserverPlugin für den Tokyo-Build-Server
+
+commands:
+  addxp:
+  level:
+  lock:
+  unlock:
