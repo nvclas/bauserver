@@ -25,7 +25,7 @@ public class Vars {
     public static final ArrayList<Player> flatWorldName = new ArrayList<>();
     public static final ArrayList<Player> normalWorldName = new ArrayList<>();
 
-    public static HashMap<Player, Integer> placedBlocks = new HashMap<>();
+    public static final HashMap<Player, Integer> placedBlocks = new HashMap<>();
     public static final HashMap<String, String> tpa = new HashMap<>();
 
     public static ItemStack getSkull(String url, String displayName) {

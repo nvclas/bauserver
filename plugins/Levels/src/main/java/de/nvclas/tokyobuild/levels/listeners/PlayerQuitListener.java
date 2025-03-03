@@ -1,4 +1,4 @@
-package de.nvclas.tokyobuild.levels.events;
+package de.nvclas.tokyobuild.levels.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.theniclas.tokyobuild.bauplugin.utils.Vars;
 
-public class PlayerQuit implements Listener {
+public class PlayerQuitListener implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();

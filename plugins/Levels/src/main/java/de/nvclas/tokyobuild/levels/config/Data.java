@@ -1,4 +1,4 @@
-package de.nvclas.tokyobuild.levels.utils;
+package de.nvclas.tokyobuild.levels.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import de.nvclas.tokyobuild.levels.main.Main;
 
 public class Data {
 
-	private static File file = new File("plugins/Levels/data.yml");
+	private static final File file = new File("plugins/Levels/data.yml");
 	@Getter
     private static FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 	

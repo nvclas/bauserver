@@ -6,6 +6,7 @@ plugins {
 version = 2.1
 
 dependencies {
+    compileOnly(libs.luckperms)
     paperweight.paperDevBundle(libs.versions.paper)
 }
 

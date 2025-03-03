@@ -9,7 +9,7 @@ dependencies {
     compileOnly(libs.luckperms)
     implementation(project(":plugins:BauserverPlugin"))
     paperweight.paperDevBundle(libs.versions.paper)
-    
+
 }
 
 tasks {

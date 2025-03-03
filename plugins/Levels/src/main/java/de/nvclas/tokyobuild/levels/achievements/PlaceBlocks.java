@@ -11,7 +11,7 @@ import de.nvclas.tokyobuild.levels.utils.Methods;
 
 public class PlaceBlocks implements Listener {
 	
-	public static HashMap<Player, Integer> placedBlocks = new HashMap<>();
+	public static final HashMap<Player, Integer> placedBlocks = new HashMap<>();
 	
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
@@ -24,9 +24,7 @@ public class PlaceBlocks implements Listener {
 			placedBlocks.put(p, amount + 1);
 			if(amount >= 500) {
 				Methods.addAchievement(p, "G�nn dir mal 'ne Pause", 75);
-			} else if(amount >= 2500) {
-				Methods.addAchievement(p, "�bertreib mal nicht!", 500);
 			}
-		}
+        }
 	}
 }

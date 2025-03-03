@@ -16,9 +16,8 @@ public class SummonWither implements Listener {
 		if(e.getSpawnReason() == SpawnReason.BUILD_WITHER) {		
 			if(!e.isCancelled()) {
 				for(Entity entity : e.getLocation().getWorld().getNearbyEntities(e.getLocation(), 5, 5, 5)) {
-					if(entity instanceof Player) {
-						Player p = (Player) entity;
-						if(Methods.isUnlocked(p)) {
+					if(entity instanceof Player p) {
+                        if(Methods.isUnlocked(p)) {
 							Methods.addAchievement(p, "Bitte nicht griefen!", 30);
 						}				
 					}

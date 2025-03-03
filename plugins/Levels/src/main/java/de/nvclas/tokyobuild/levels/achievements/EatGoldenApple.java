@@ -15,12 +15,11 @@ public class EatGoldenApple implements Listener {
 		Player p = e.getPlayer();
 		if(!e.isCancelled()) {
 			if(Methods.isUnlocked(p)) {
-				if(e.getItem() != null) {
-					if(e.getItem().getDurability() == 1 && e.getItem().getType() == Material.GOLDEN_APPLE) {
-						Methods.addAchievement(p, "UNLIMITED POWER", 10);
-					}
-				}
-			}				
+                e.getItem();
+                if (e.getItem().getDurability() == 1 && e.getItem().getType() == Material.GOLDEN_APPLE) {
+                    Methods.addAchievement(p, "UNLIMITED POWER", 10);
+                }
+            }				
 		}
 	}
 }

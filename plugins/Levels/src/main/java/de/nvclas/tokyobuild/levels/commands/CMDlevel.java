@@ -6,20 +6,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.nvclas.tokyobuild.levels.utils.Data;
+import de.nvclas.tokyobuild.levels.config.Data;
+import org.jetbrains.annotations.NotNull;
 
 public class CMDlevel implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
 		if(command.getName().equalsIgnoreCase("level")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(Data.getConfig().get("Levels." + p.getUniqueId().toString() + ".Level") == null) {
-					p.sendMessage(AntiBlockUpdate.PREFIX + "�cDu hast nicht die M�glichkeit XP zu sammeln");
+			if(sender instanceof Player p) {
+                if(Data.getConfig().get("Levels." + p.getUniqueId() + ".Level") == null) {
+					p.sendMessage(Vars.pr + "�cDu hast nicht die M�glichkeit XP zu sammeln");
 				} else {
-					p.sendMessage(AntiBlockUpdate.PREFIX + "�aDu befindest dich derzeit auf �bLevel " + Data.getConfig().get("Levels." + p.getUniqueId().toString() + ".Level"));
-					p.sendMessage(AntiBlockUpdate.PREFIX + "�aDeine XP�8: �b" + Data.getConfig().get("Levels." + p.getUniqueId().toString() + ".Xp") + "�8/�b" + Data.getConfig().get("Levels." + p.getUniqueId().toString() + ".NextLevelXp"));
+					p.sendMessage(Vars.pr + "�aDu befindest dich derzeit auf �bLevel " + Data.getConfig().get("Levels." + p.getUniqueId() + ".Level"));
+					p.sendMessage(Vars.pr + "�aDeine XP�8: �b" + Data.getConfig().get("Levels." + p.getUniqueId() + ".Xp") + "�8/�b" + Data.getConfig().get("Levels." + p.getUniqueId() + ".NextLevelXp"));
 				}
 			}
 		}

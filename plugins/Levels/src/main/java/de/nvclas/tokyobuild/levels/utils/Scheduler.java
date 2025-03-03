@@ -1,9 +1,10 @@
 package de.nvclas.tokyobuild.levels.utils;
 
-import de.nvclas.tokyobuild.bauplugin.utils.Vars;
-import de.nvclas.tokyobuild.levels.main.Main;
+import de.nvclas.tokyobuild.levels.config.Data;
+import de.theniclas.tokyobuild.bauplugin.utils.Vars;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,31 +13,38 @@ import java.util.Map;
 
 public class Scheduler {
 
-    public static Map<Player, Integer> afk = new HashMap<>();
-    public static List<Player> afkPlayers = new ArrayList<>();
+    private final Map<Player, Integer> afkTimer;
+    private final List<Player> afkPlayers;
+    private final JavaPlugin plugin;
+    
+    public Scheduler(JavaPlugin plugin) {
+        this.afkTimer = new HashMap<>();
+        this.afkPlayers = new ArrayList<>();
+        this.plugin = plugin;
+    }
 
-    public static void startScheduler() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getPlugin(), () -> {
+    public void startScheduler() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 
             for (Player all : Bukkit.getOnlinePlayers()) {
                 if (!afkPlayers.contains(all)) {
                     //AFK TIMER
-                    if (afk.containsKey(all)) {
-                        afk.put(all, afk.get(all) + 1);
+                    if (afkTimer.containsKey(all)) {
+                        afkTimer.put(all, afkTimer.get(all) + 1);
                     } else {
-                        afk.put(all, 0);
+                        afkTimer.put(all, 0);
                     }
-                    if (afk.get(all) >= 5) {
+                    if (afkTimer.get(all) >= 5) {
                         afkPlayers.add(all);
-                        all.sendMessage(AntiBlockUpdate.PREFIX + "�eDu bist nun AFK");
+                        all.sendMessage(Vars.pr + "�eDu bist nun AFK");
                     }
 
                     //XP TIMER
-                    if (Data.getConfig().get("Levels." + all.getUniqueId().toString()) != null) {
+                    if (Data.getConfig().get("Levels." + all.getUniqueId()) != null) {
                         Methods.addXp(all, 1);
                     }
                 }
             }
-        }, 20 * 60, 20 * 60);
+        }, (long) 20 * 60, (long) 20 * 60);
     }
 }
