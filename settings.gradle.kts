@@ -1,3 +1,6 @@
 rootProject.name = "TokyoBuild"
 
-include("plugins:BauserverPlugin", "plugins:Levels", "plugins:AntiBlockUpdate")
+include("BauserverPlugin", "Levels", "AntiBlockUpdate")
+project(":BauserverPlugin").projectDir = file("plugins/BauserverPlugin")
+project(":Levels").projectDir = file("plugins/Levels")
+project(":AntiBlockUpdate").projectDir = file("plugins/AntiBlockUpdate")

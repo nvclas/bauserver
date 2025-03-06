@@ -7,13 +7,13 @@ version = 2.1
 
 dependencies {
     compileOnly(libs.luckperms)
-    implementation(project(":plugins:BauserverPlugin"))
+    implementation(project(":BauserverPlugin"))
     paperweight.paperDevBundle(libs.versions.paper)
 
 }
 
 tasks {
     runServer {
-        minecraftVersion("1.21.1")
+        minecraftVersion(libs.versions.minecraft.get())
     }
 }

@@ -11,6 +11,6 @@ dependencies {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.1")
+        minecraftVersion(libs.versions.minecraft.get())
     }
 }
