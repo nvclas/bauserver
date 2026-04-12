@@ -1,0 +1,17 @@
+# Gradle build output
+.gradle/
+build/
+
+# Compiled plugin JAR (produced by the jar task)
+BauserverPlugin.jar
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

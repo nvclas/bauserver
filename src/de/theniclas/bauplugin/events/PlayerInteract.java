@@ -9,7 +9,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Slab;
-import MultipleFacing;
+import org.bukkit.block.data.type.MultipleFacing;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
