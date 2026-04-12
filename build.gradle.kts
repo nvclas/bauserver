@@ -3,6 +3,7 @@ import io.papermc.paperweight.userdev.ReobfArtifactConfiguration
 plugins {
     java
     alias(libs.plugins.paperweight.userdev)
+    alias(libs.plugins.runPaper)
 }
 
 group = "de.theniclas"
