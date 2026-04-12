@@ -127,7 +127,7 @@ public class Vars {
         if (p.hasPermission("bs.worlds.infinite")) {
             return Integer.MAX_VALUE;
         }
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 30; i >= 1; i--) {
             if (p.hasPermission("bs.worlds." + i)) {
                 return i;
             }

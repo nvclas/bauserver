@@ -9,6 +9,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Slab;
+import MultipleFacing;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -83,8 +84,8 @@ public class PlayerInteract implements Listener {
         Block target = e.getClickedBlock().getRelative(e.getBlockFace());
         if (isOccupied(target)) return;
         target.setType(Material.BROWN_MUSHROOM_BLOCK);
-        org.bukkit.block.data.type.MultipleFacing pore =
-                (org.bukkit.block.data.type.MultipleFacing) target.getBlockData();
+        MultipleFacing pore =
+                (MultipleFacing) target.getBlockData();
         for (BlockFace face : pore.getAllowedFaces()) pore.setFace(face, false);
         target.setBlockData(pore);
         p.playSound(target.getLocation(), Sound.BLOCK_WOOD_BREAK, 1f, 0.8f);

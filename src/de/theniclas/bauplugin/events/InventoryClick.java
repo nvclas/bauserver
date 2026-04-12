@@ -163,12 +163,12 @@ public class InventoryClick implements Listener {
             List<String> lore = new ArrayList<>();
             String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
             if (locStr != null) {
-                String[] parts = locStr.split(", ");
+                String[] parts = locStr.split(",");
                 if (parts.length >= 4) {
                     lore.add(ChatColor.GOLD + "Location" + ChatColor.DARK_GRAY + ": " + ChatColor.YELLOW
-                            + Math.round(Double.parseDouble(parts[1])) + ", "
-                            + Math.round(Double.parseDouble(parts[2])) + ", "
-                            + Math.round(Double.parseDouble(parts[3])));
+                            + Math.round(Double.parseDouble(parts[1].trim())) + ", "
+                            + Math.round(Double.parseDouble(parts[2].trim())) + ", "
+                            + Math.round(Double.parseDouble(parts[3].trim())));
                 }
             }
             if (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin")) {
@@ -270,11 +270,11 @@ public class InventoryClick implements Listener {
             // Left-click: teleport to spawn point
             String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
             if (locStr == null) return;
-            String[] parts = locStr.split(", ");
+            String[] parts = locStr.split(",");
             if (parts.length < 4) return;
-            double x = Double.parseDouble(parts[1]);
-            double y = Double.parseDouble(parts[2]);
-            double z = Double.parseDouble(parts[3]);
+            double x = Double.parseDouble(parts[1].trim());
+            double y = Double.parseDouble(parts[2].trim());
+            double z = Double.parseDouble(parts[3].trim());
 
             World world = Bukkit.getWorld("worlds/" + parts[0]);
             if (world != null) {

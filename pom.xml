@@ -76,11 +76,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.2</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.theniclas.bauplugin.main.Main</mainClass>
-                        </manifest>
-                    </archive>
                     <outputDirectory>${project.basedir}</outputDirectory>
                     <finalName>BauserverPlugin</finalName>
                 </configuration>

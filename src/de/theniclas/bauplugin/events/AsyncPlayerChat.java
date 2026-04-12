@@ -29,17 +29,17 @@ public class AsyncPlayerChat implements Listener {
         String message = e.getMessage();
         ItemStack icon = p.getInventory().getItemInHand();
 
-        if (!message.matches("[a-zA-Z0-9]+") || message.length() > 16) {
-            p.sendMessage(Vars.PREFIX + "§cDer Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten");
-            return;
-        }
-
         if (message.equalsIgnoreCase("abbrechen") || message.equalsIgnoreCase("abbruch")
                 || message.equalsIgnoreCase("stop") || message.equalsIgnoreCase("stopp")) {
             Vars.voidWorldName.remove(p);
             Vars.flatWorldName.remove(p);
             Vars.normalWorldName.remove(p);
             p.sendMessage(Vars.PREFIX + "§aWeltenerstellung abgebrochen");
+            return;
+        }
+
+        if (!message.matches("[a-zA-Z0-9]+") || message.length() > 16) {
+            p.sendMessage(Vars.PREFIX + "§cDer Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten");
             return;
         }
 

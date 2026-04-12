@@ -24,6 +24,7 @@ public class CMDprepare implements CommandExecutor {
 
         World world = p.getWorld();
         world.setTime(6000);
+        p.sendMessage(Vars.PREFIX + "§aWeltzeit auf Tag gesetzt");
 
         world.setGameRule(GameRule.DO_MOB_SPAWNING,     false);
         p.sendMessage(Vars.PREFIX + "§aMobspawning §edeaktiviert");
