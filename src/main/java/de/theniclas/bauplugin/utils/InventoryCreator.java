@@ -49,7 +49,7 @@ public class InventoryCreator {
         inv.setItem(3, pane(Material.WHITE_STAINED_GLASS_PANE));
         ItemStack create = new ItemStack(Material.NETHER_STAR);
         ItemMeta cm = create.getItemMeta();
-        cm.setDisplayName("Welt erstellen");
+        cm.setDisplayName("<dark_aqua>Welt erstellen");
         create.setItemMeta(cm);
         inv.setItem(4, create);
         inv.setItem(5, pane(Material.WHITE_STAINED_GLASS_PANE));

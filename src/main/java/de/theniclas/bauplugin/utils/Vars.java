@@ -33,6 +33,7 @@ public class Vars {
     public static final Component NOPERM = prefixed("<red>Dafür hast du keine Rechte");
     private static Vars instance;
     private final Bauserver plugin;
+
     public Vars(Bauserver plugin) {
         this.plugin = plugin;
     }

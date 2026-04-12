@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,7 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.block.data.MultipleFacing;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
@@ -38,14 +38,15 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (e.getHand() != EquipmentSlot.HAND || e.getAction() != Action.RIGHT_CLICK_BLOCK || e.getClickedBlock() == null) {
+        if (e.getHand() != EquipmentSlot.HAND || e.getAction() != Action.RIGHT_CLICK_BLOCK
+                || e.getClickedBlock() == null) {
             return;
         }
 
         String itemName = getDisplayName(p.getInventory().getItemInMainHand());
         if (itemName != null && handleSpecialBlockPlacement(e, p, itemName)) {
-                return;
-            }
+            return;
+        }
 
 
         Block clicked = e.getClickedBlock();
@@ -56,7 +57,8 @@ public class PlayerInteract implements Listener {
 
             Block target = clicked;
             BlockData data = target.getBlockData();
-            if (type == Material.IRON_DOOR && data instanceof Bisected bisected && bisected.getHalf() == Bisected.Half.TOP) {
+            if (type == Material.IRON_DOOR && data instanceof Bisected bisected
+                    && bisected.getHalf() == Bisected.Half.TOP) {
                 target = clicked.getRelative(BlockFace.DOWN);
                 data = target.getBlockData();
             }
@@ -68,7 +70,8 @@ public class PlayerInteract implements Listener {
             boolean opening = !openable.isOpen();
             openable.setOpen(opening);
             target.setBlockData(openable, true);
-            p.playSound(clicked.getLocation(), opening ? Sound.BLOCK_IRON_DOOR_OPEN : Sound.BLOCK_IRON_DOOR_CLOSE, 1f, 1f);
+            p.playSound(clicked.getLocation(), opening ? Sound.BLOCK_IRON_DOOR_OPEN : Sound.BLOCK_IRON_DOOR_CLOSE, 1f,
+                    1f);
         }
     }
 
