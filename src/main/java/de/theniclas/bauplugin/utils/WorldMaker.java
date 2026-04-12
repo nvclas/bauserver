@@ -14,13 +14,13 @@ public class WorldMaker {
     public static void createNormalWorld(String name, Player p, ItemStack icon) {
         if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.normalWorldName.remove(p);
-            p.sendMessage(Vars.PR + "\u00a7eErstelle normale Welt...");
+            p.sendMessage(Vars.PR + "§eErstelle normale Welt...");
             new WorldCreator("worlds/" + name).type(WorldType.NORMAL).createWorld();
             saveWorldMeta(name, p, icon, "Normal");
             Bukkit.getWorld("worlds/" + name).setSpawnLocation(0,
                     Bukkit.getWorld("worlds/" + name).getHighestBlockYAt(0, 0), 0);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.PR + "\u00a7aDeine normale Welt wurde mit dem Namen \u00a7e" + name + " \u00a7aerstellt");
+            p.sendMessage(Vars.PR + "§aDeine normale Welt wurde mit dem Namen §e" + name + " §aerstellt");
         } else {
             sendWorldLimitMessage(p);
         }
@@ -29,13 +29,13 @@ public class WorldMaker {
     public static void createFlatWorld(String name, Player p, ItemStack icon) {
         if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.flatWorldName.remove(p);
-            p.sendMessage(Vars.PR + "\u00a7eErstelle Flat-Welt...");
+            p.sendMessage(Vars.PR + "§eErstelle Flat-Welt...");
             new WorldCreator("worlds/" + name).type(WorldType.FLAT).createWorld();
             saveWorldMeta(name, p, icon, "Flat");
             Bukkit.getWorld("worlds/" + name).setSpawnLocation(0,
                     Bukkit.getWorld("worlds/" + name).getHighestBlockYAt(0, 0), 0);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.PR + "\u00a7aDeine Flat-Welt wurde mit dem Namen \u00a7e" + name + " \u00a7aerstellt");
+            p.sendMessage(Vars.PR + "§aDeine Flat-Welt wurde mit dem Namen §e" + name + " §aerstellt");
         } else {
             sendWorldLimitMessage(p);
         }
@@ -44,7 +44,7 @@ public class WorldMaker {
     public static void createVoidWorld(String name, Player p, ItemStack icon) {
         if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.voidWorldName.remove(p);
-            p.sendMessage(Vars.PR + "\u00a7eErstelle Void-Welt...");
+            p.sendMessage(Vars.PR + "§eErstelle Void-Welt...");
             new WorldCreator("worlds/" + name)
                     .type(WorldType.FLAT)
                     .generator(new ChunkGenerator() {})
@@ -55,7 +55,7 @@ public class WorldMaker {
                     .getBlockAt(new Location(Bukkit.getWorld("worlds/" + name), 0, 99, 0))
                     .setType(Material.BEDROCK);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.PR + "\u00a7aDeine Void-Welt wurde mit dem Namen \u00a7e" + name + " \u00a7aerstellt");
+            p.sendMessage(Vars.PR + "§aDeine Void-Welt wurde mit dem Namen §e" + name + " §aerstellt");
         } else {
             sendWorldLimitMessage(p);
         }
@@ -69,7 +69,7 @@ public class WorldMaker {
     }
 
     private static void sendWorldLimitMessage(Player p) {
-        p.sendMessage(Vars.PR + "\u00a7cDu kannst keine weiteren Welten erstellen");
+        p.sendMessage(Vars.PR + "§cDu kannst keine weiteren Welten erstellen");
         Vars.voidWorldName.remove(p);
         Vars.flatWorldName.remove(p);
         Vars.normalWorldName.remove(p);

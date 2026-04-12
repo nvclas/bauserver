@@ -17,10 +17,10 @@ public class CMDspawn implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
         if (Configs.worldsConfig.getConfigurationSection("Spawn") == null) {
-            p.sendMessage(Vars.PR + "\u00a7cEs wurde kein Spawnpunkt gesetzt"); return false;
+            p.sendMessage(Vars.PR + "§cEs wurde kein Spawnpunkt gesetzt"); return false;
         }
         World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
-        if (w == null) { p.sendMessage(Vars.PR + "\u00a7cSpawnwelt nicht gefunden"); return false; }
+        if (w == null) { p.sendMessage(Vars.PR + "§cSpawnwelt nicht gefunden"); return false; }
         double x = Configs.worldsConfig.getDouble("Spawn.X");
         double y = Configs.worldsConfig.getDouble("Spawn.Y");
         double z = Configs.worldsConfig.getDouble("Spawn.Z");

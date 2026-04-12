@@ -21,11 +21,11 @@ public class PlayerJoin implements Listener {
 
         if (!p.hasPlayedBefore()) {
             e.joinMessage(LegacyComponentSerializer.legacySection().deserialize(
-                    "\u00a79" + p.getName() + " \u00a77ist neu beigetreten"));
-            p.sendMessage(Vars.PR + "\u00a7aJoine auf unseren Discord, um dich freizuschalten!");
+                    "§9" + p.getName() + " §7ist neu beigetreten"));
+            p.sendMessage(Vars.PR + "§aJoine auf unseren Discord, um dich freizuschalten!");
         } else {
             e.joinMessage(LegacyComponentSerializer.legacySection().deserialize(
-                    "\u00a79" + p.getName() + " \u00a77hat den Server betreten"));
+                    "§9" + p.getName() + " §7hat den Server betreten"));
         }
 
         p.setFoodLevel(20);

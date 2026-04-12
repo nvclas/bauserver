@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import net.kyori.adventure.text.Component;
@@ -20,14 +22,14 @@ import org.bukkit.profile.PlayerTextures;
 
 public class Vars {
 
-    public static final String PR = "\u00a78[\u00a79\u00a7lTokyo-Build\u00a78] ";
-    public static final String NOPERM = PR + "\u00a7cDaf\u00fcr hast du keine Rechte";
+    public static final String PR = "§8[§9§lTokyo-Build§8] ";
+    public static final String NOPERM = PR + "§cDafür hast du keine Rechte";
 
-    public static ArrayList<Player> voidWorldName = new ArrayList<>();
-    public static ArrayList<Player> flatWorldName = new ArrayList<>();
-    public static ArrayList<Player> normalWorldName = new ArrayList<>();
+    public static final List<Player> voidWorldName = new ArrayList<>();
+    public static final List<Player> flatWorldName = new ArrayList<>();
+    public static final List<Player> normalWorldName = new ArrayList<>();
 
-    public static HashMap<String, String> tpa = new HashMap<>();
+    public static final Map<String, String> tpa = new HashMap<>();
 
     public static ItemStack getSkull(String url, String displayName) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
@@ -54,9 +56,9 @@ public class Vars {
     }
 
     public static boolean isTrusted(OfflinePlayer p, String worldName) {
-        java.util.List<String> trusted = Configs.worldsConfig.getStringList(
+        List<String> trusted = Configs.worldsConfig.getStringList(
                 "Worlds." + worldName.replace("worlds/", "") + ".Trusted");
-        return trusted != null && trusted.contains(p.getUniqueId().toString());
+        return trusted.contains(p.getUniqueId().toString());
     }
 
     public static void loadGlobalSpawnWorld() {

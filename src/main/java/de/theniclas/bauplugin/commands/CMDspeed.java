@@ -15,11 +15,11 @@ public class CMDspeed implements CommandExecutor {
         if (!p.hasPermission("bs.speed")) { p.sendMessage(Vars.NOPERM); return false; }
         if (args.length < 1) {
             if (p.isFlying()) {
-                p.sendMessage(Vars.PR + "\u00a7aDeine Fluggeschwindigkeit betr\u00e4gt derzeit \u00a7e"
-                        + (p.getFlySpeed() * 10) + " \u00a78(Standard: 1)");
+                p.sendMessage(Vars.PR + "§aDeine Fluggeschwindigkeit beträgt derzeit §e"
+                        + (p.getFlySpeed() * 10) + " §8(Standard: 1)");
             } else {
-                p.sendMessage(Vars.PR + "\u00a7aDeine Laufgeschwindigkeit betr\u00e4gt derzeit \u00a7e"
-                        + (p.getWalkSpeed() * 10) + " \u00a78(Standard: 2)");
+                p.sendMessage(Vars.PR + "§aDeine Laufgeschwindigkeit beträgt derzeit §e"
+                        + (p.getWalkSpeed() * 10) + " §8(Standard: 2)");
             }
             return false;
         }
@@ -27,17 +27,17 @@ public class CMDspeed implements CommandExecutor {
         try {
             value = Float.parseFloat(args[0]);
         } catch (NumberFormatException e) {
-            p.sendMessage(Vars.PR + "\u00a7cZahlen w\u00e4ren praktisch"); return false;
+            p.sendMessage(Vars.PR + "§cZahlen wären praktisch"); return false;
         }
         if (value < 1 || value > 10) {
-            p.sendMessage(Vars.PR + "\u00a7c\u00dcm, ich denke zwischen 1 und 10 sollte reichen"); return false;
+            p.sendMessage(Vars.PR + "§cÄhm, ich denke zwischen 1 und 10 sollte reichen"); return false;
         }
         if (p.isFlying()) {
             p.setFlySpeed(value / 10);
-            p.sendMessage(Vars.PR + "\u00a7aDeine Fluggeschwindigkeit wurde auf \u00a7e" + value + " \u00a7agesetzt");
+            p.sendMessage(Vars.PR + "§aDeine Fluggeschwindigkeit wurde auf §e" + value + " §agesetzt");
         } else {
             p.setWalkSpeed(value / 10);
-            p.sendMessage(Vars.PR + "\u00a7aDeine Laufgeschwindigkeit wurde auf \u00a7e" + value + " \u00a7agesetzt");
+            p.sendMessage(Vars.PR + "§aDeine Laufgeschwindigkeit wurde auf §e" + value + " §agesetzt");
         }
         return false;
     }

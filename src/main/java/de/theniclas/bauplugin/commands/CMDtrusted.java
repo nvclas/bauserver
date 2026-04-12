@@ -18,16 +18,16 @@ public class CMDtrusted implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.PR + "\u00a7cDas geht nur in deiner eigenen Welt"); return false;
+            p.sendMessage(Vars.PR + "§cDas geht nur in deiner eigenen Welt"); return false;
         }
         String worldKey = p.getWorld().getName().replace("worlds/", "");
         java.util.List<String> list = Configs.worldsConfig.getStringList("Worlds." + worldKey + ".Trusted");
         if (list.isEmpty()) {
-            p.sendMessage(Vars.PR + "\u00a7cAu\u00dfer dir hat in dieser Welt niemand Baurechte"); return false;
+            p.sendMessage(Vars.PR + "§cAußer dir hat in dieser Welt niemand Baurechte"); return false;
         }
-        p.sendMessage(Vars.PR + "\u00a7aFolgende Spieler haben in deiner Welt Baurechte:");
+        p.sendMessage(Vars.PR + "§aFolgende Spieler haben in deiner Welt Baurechte:");
         for (String uuid : list) {
-            p.sendMessage("\u00a77 - \u00a7e" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
+            p.sendMessage("§7 - §e" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
         }
         return false;
     }

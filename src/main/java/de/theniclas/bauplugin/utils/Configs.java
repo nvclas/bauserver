@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.theniclas.bauplugin.main.Main;
+import de.theniclas.bauplugin.Bauserver;
 
 public class Configs {
 
@@ -17,7 +17,7 @@ public class Configs {
         worldsFile = new File("plugins/Bauserver", "worlds.yml");
 
         if (!worldsFile.exists()) {
-            Main.getPlugin().getDataFolder().mkdirs();
+            Bauserver.getPlugin().getDataFolder().mkdirs();
             try {
                 worldsFile.createNewFile();
             } catch (IOException e) {
@@ -25,7 +25,7 @@ public class Configs {
             }
             worldsConfig.set("Visibility", false);
             saveConfiguration();
-            Main.getPlugin().getLogger().info("Weltenconfig erstellt");
+            Bauserver.getPlugin().getLogger().info("Weltenconfig erstellt");
         }
     }
 

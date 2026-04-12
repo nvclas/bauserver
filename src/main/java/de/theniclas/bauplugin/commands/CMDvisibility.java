@@ -16,10 +16,10 @@ public class CMDvisibility implements CommandExecutor {
         if (!p.hasPermission("bs.admin")) { p.sendMessage(Vars.NOPERM); return false; }
         if (Configs.worldsConfig.getBoolean("Visibility")) {
             Configs.worldsConfig.set("Visibility", false);
-            p.sendMessage(Vars.PR + "\u00a7aWelten sind nun nicht mehr f\u00fcr alle sichtbar");
+            p.sendMessage(Vars.PR + "§aWelten sind nun nicht mehr für alle sichtbar");
         } else {
             Configs.worldsConfig.set("Visibility", true);
-            p.sendMessage(Vars.PR + "\u00a7aWelten sind nun f\u00fcr alle sichtbar");
+            p.sendMessage(Vars.PR + "§aWelten sind nun für alle sichtbar");
         }
         Configs.saveConfiguration();
         return false;

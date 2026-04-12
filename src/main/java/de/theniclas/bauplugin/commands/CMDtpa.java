@@ -10,39 +10,40 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.main.Main;
+import de.theniclas.bauplugin.Bauserver;
 import de.theniclas.bauplugin.utils.Vars;
+import org.jetbrains.annotations.NotNull;
 
 public class CMDtpa implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player p)) return false;
-        if (args.length < 1) { p.sendMessage(Vars.PR + "\u00a7cWem willst du eine Anfrage schicken?"); return false; }
+        if (args.length < 1) { p.sendMessage(Vars.PR + "§cWem willst du eine Anfrage schicken?"); return true; }
         Player target = Bukkit.getPlayer(args[0]);
-        if (target == null) { p.sendMessage(Vars.PR + "\u00a7e" + args[0] + " \u00a7cist nicht online"); return false; }
-        if (target.getName().equals(p.getName())) { p.sendMessage(Vars.PR + "\u00a7cDu bist doch schon bei dir"); return false; }
+        if (target == null) { p.sendMessage(Vars.PR + "§e" + args[0] + " §cist nicht online"); return true; }
+        if (target.getName().equals(p.getName())) { p.sendMessage(Vars.PR + "§cDu bist doch schon bei dir"); return true; }
         if (Vars.tpa.containsKey(target.getUniqueId().toString())
                 && Vars.tpa.get(target.getUniqueId().toString()).equals(p.getUniqueId().toString())) {
-            p.sendMessage(Vars.PR + "\u00a7cDu hast \u00a7e" + target.getName() + " \u00a7cbereits eine Anfrage gesendet");
-            return false;
+            p.sendMessage(Vars.PR + "§cDu hast §e" + target.getName() + " §cbereits eine Anfrage gesendet");
+            return true;
         }
         Vars.tpa.put(target.getUniqueId().toString(), p.getUniqueId().toString());
-        p.sendMessage(Vars.PR + "\u00a76Du hast \u00a7e" + target.getName() + " \u00a76eine Anfrage gesendet");
-        target.sendMessage(Vars.PR + "\u00a7e" + p.getName() + " \u00a76m\u00f6chte sich zu dir teleportieren");
-        target.sendMessage(Vars.PR + "\u00a76Die Anfrage ist \u00a7e30 Sekunden \u00a76lang g\u00fcltig");
+        p.sendMessage(Vars.PR + "§6Du hast §e" + target.getName() + " §6eine Anfrage gesendet");
+        target.sendMessage(Vars.PR + "§e" + p.getName() + " §6möchte sich zu dir teleportieren");
+        target.sendMessage(Vars.PR + "§6Die Anfrage ist §e30 Sekunden §6lang gültig");
         target.sendMessage(Component.text(Vars.PR + "Klicke hier: ")
                 .append(Component.text("[ANNEHMEN]")
                         .color(NamedTextColor.GREEN)
                         .clickEvent(ClickEvent.runCommand("/tpaccept " + p.getName()))));
-        Bukkit.getScheduler().runTaskLater(Main.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(Bauserver.getPlugin(), () -> {
             if (Vars.tpa.containsKey(target.getUniqueId().toString())
                     && Vars.tpa.get(target.getUniqueId().toString()).equals(p.getUniqueId().toString())) {
                 Vars.tpa.remove(target.getUniqueId().toString());
-                target.sendMessage(Vars.PR + "\u00a7cDie Anfrage von \u00a7e" + p.getName() + " \u00a7cist abgelaufen");
-                if (p.isOnline()) p.sendMessage(Vars.PR + "\u00a7cDeine Anfrage an \u00a7e" + target.getName() + " \u00a7cist abgelaufen");
+                target.sendMessage(Vars.PR + "§cDie Anfrage von §e" + p.getName() + " §cist abgelaufen");
+                if (p.isOnline()) p.sendMessage(Vars.PR + "§cDeine Anfrage an §e" + target.getName() + " §cist abgelaufen");
             }
-        }, 20 * 30);
-        return false;
+        }, (long) 20 * 30);
+        return true;
     }
 }

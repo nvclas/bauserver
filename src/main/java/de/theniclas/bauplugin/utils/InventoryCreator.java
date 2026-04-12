@@ -34,7 +34,7 @@ public class InventoryCreator {
         inv.setItem(3, pane(Material.WHITE_STAINED_GLASS_PANE));
         ItemStack create = new ItemStack(Material.NETHER_STAR);
         ItemMeta cm = create.getItemMeta();
-        cm.setDisplayName("\u00a7cWelt erstellen");
+        cm.setDisplayName("§cWelt erstellen");
         create.setItemMeta(cm);
         inv.setItem(4, create);
         inv.setItem(5, pane(Material.WHITE_STAINED_GLASS_PANE));
@@ -44,13 +44,13 @@ public class InventoryCreator {
 
         ItemStack prev = new ItemStack(Material.GUNPOWDER);
         ItemMeta pm = prev.getItemMeta();
-        pm.setDisplayName("\u00a7bVorherige Seite");
+        pm.setDisplayName("§bVorherige Seite");
         prev.setItemMeta(pm);
         inv.setItem(45, prev);
         for (int i : new int[]{46, 47, 48, 49, 50, 51, 52}) inv.setItem(i, pane(Material.GRAY_STAINED_GLASS_PANE));
         ItemStack next = new ItemStack(Material.GUNPOWDER);
         ItemMeta nm = next.getItemMeta();
-        nm.setDisplayName("\u00a7bN\u00e4chste Seite");
+        nm.setDisplayName("§bNächste Seite");
         next.setItemMeta(nm);
         inv.setItem(53, next);
 
@@ -89,18 +89,18 @@ public class InventoryCreator {
         }
         ItemStack item = new ItemStack(mat);
         ItemMeta im = item.getItemMeta();
-        im.setDisplayName("\u00a7a" + world);
+        im.setDisplayName("§a" + world);
         List<String> lore = new ArrayList<>();
         String owner = Configs.worldsConfig.getString("Worlds." + world + ".Owner");
-        lore.add("\u00a76Ersteller\u00a78: \u00a7e" + ("0".equals(owner) || owner == null ? "Niemand"
+        lore.add("§6Ersteller§8: §e" + ("0".equals(owner) || owner == null ? "Niemand"
                 : Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName()));
         String type = Configs.worldsConfig.getString("Worlds." + world + ".Type");
-        lore.add("\u00a76Typ\u00a78: \u00a7e" + (type == null || "0".equals(type) ? "Unbekannt" : type));
+        lore.add("§6Typ§8: §e" + (type == null || "0".equals(type) ? "Unbekannt" : type));
         if (Configs.worldsConfig.getBoolean("Worlds." + world + ".Properties.Locked")
                 && Configs.worldsConfig.get("Worlds." + world + ".Properties.Locked") != null)
-            lore.add("\u00a74Welt gesperrt");
+            lore.add("§4Welt gesperrt");
         if (Vars.isOwner(p, world) || p.hasPermission("bs.admin"))
-            lore.add("\u00a7cRechtsklick zum L\u00f6schen");
+            lore.add("§cRechtsklick zum Löschen");
         im.setLore(lore);
         item.setItemMeta(im);
         return item;

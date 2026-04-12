@@ -18,23 +18,23 @@ public class CMDwkick implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.PR + "\u00a7cDas hier ist gar nicht deine Welt"); return false;
+            p.sendMessage(Vars.PR + "§cDas hier ist gar nicht deine Welt"); return false;
         }
-        if (args.length < 1) { p.sendMessage(Vars.PR + "\u00a7cWen willst du kicken?"); return false; }
+        if (args.length < 1) { p.sendMessage(Vars.PR + "§cWen willst du kicken?"); return false; }
         Player target = Bukkit.getPlayer(args[0]);
-        if (target == null) { p.sendMessage(Vars.PR + "\u00a7cDieser Spieler ist nicht online"); return false; }
-        if (target.hasPermission("bs.admin")) { p.sendMessage(Vars.PR + "\u00a7cDiesen Spieler kannst du nicht kicken"); return false; }
+        if (target == null) { p.sendMessage(Vars.PR + "§cDieser Spieler ist nicht online"); return false; }
+        if (target.hasPermission("bs.admin")) { p.sendMessage(Vars.PR + "§cDiesen Spieler kannst du nicht kicken"); return false; }
         if (Configs.worldsConfig.getConfigurationSection("Spawn") == null) {
-            p.sendMessage(Vars.PR + "\u00a7cKein globaler Spawn gesetzt"); return false;
+            p.sendMessage(Vars.PR + "§cKein globaler Spawn gesetzt"); return false;
         }
         World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
-        if (w == null) { p.sendMessage(Vars.PR + "\u00a7cSpawnwelt nicht gefunden"); return false; }
+        if (w == null) { p.sendMessage(Vars.PR + "§cSpawnwelt nicht gefunden"); return false; }
         double x = Configs.worldsConfig.getDouble("Spawn.X");
         double y = Configs.worldsConfig.getDouble("Spawn.Y");
         double z = Configs.worldsConfig.getDouble("Spawn.Z");
         target.teleport(new Location(w, x, y, z));
-        target.sendMessage(Vars.PR + "\u00a7cDu wurdest aus der Welt gekickt");
-        p.sendMessage(Vars.PR + "\u00a7e" + target.getName() + " \u00a7awurde aus deiner Welt gekickt");
+        target.sendMessage(Vars.PR + "§cDu wurdest aus der Welt gekickt");
+        p.sendMessage(Vars.PR + "§e" + target.getName() + " §awurde aus deiner Welt gekickt");
         return false;
     }
 }

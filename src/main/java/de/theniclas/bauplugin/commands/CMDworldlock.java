@@ -19,7 +19,7 @@ public class CMDworldlock implements CommandExecutor {
                 && Configs.worldsConfig.getBoolean("Worlds." + worldKey + ".Properties.Locked");
         Configs.worldsConfig.set("Worlds." + worldKey + ".Properties.Locked", !locked);
         Configs.saveConfiguration();
-        p.sendMessage(Vars.PR + "\u00a7aWelt wurde \u00a7e" + (!locked ? "gesperrt" : "entsperrt"));
+        p.sendMessage(Vars.PR + "§aWelt wurde §e" + (!locked ? "gesperrt" : "entsperrt"));
         return false;
     }
 }

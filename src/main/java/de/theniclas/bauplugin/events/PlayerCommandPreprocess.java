@@ -18,28 +18,28 @@ public class PlayerCommandPreprocess implements Listener {
 
         if (msg.startsWith("/help")) {
             e.setCancelled(true);
-            p.sendMessage("\u00a7e-------\u00a76Verf\u00fcgbare Befehle\u00a7e-------");
-            p.sendMessage("\u00a76/fly \u00a77- \u00a7eDe- und aktiviere das Fliegen");
-            p.sendMessage("\u00a76/tpa \u00a77- \u00a7eSende eine Teleportanfrage");
-            if (p.hasPermission("bs.gm")) p.sendMessage("\u00a76/gm \u00a77- \u00a7e\u00c4ndere deinen Spielmodus");
-            if (p.hasPermission("bs.tp")) p.sendMessage("\u00a76/tp \u00a77- \u00a7eTeleportiere dich zu Spielern");
-            if (p.hasPermission("bs.speed")) p.sendMessage("\u00a76/speed \u00a77- \u00a7e\u00c4ndere deine Geschwindigkeit");
-            if (p.hasPermission("bs.blocks")) p.sendMessage("\u00a76/blocks \u00a77- \u00a7e\u00d6ffne Spezialbl\u00f6cke");
-            if (p.hasPermission("bs.tools")) p.sendMessage("\u00a76/tools \u00a77- \u00a7e\u00d6ffne Bautools");
+            p.sendMessage("§e-------§6Verfügbare Befehle§e-------");
+            p.sendMessage("§6/fly §7- §eDe- und aktiviere das Fliegen");
+            p.sendMessage("§6/tpa §7- §eSende eine Teleportanfrage");
+            if (p.hasPermission("bs.gm")) p.sendMessage("§6/gm §7- §eÄndere deinen Spielmodus");
+            if (p.hasPermission("bs.tp")) p.sendMessage("§6/tp §7- §eTeleportiere dich zu Spielern");
+            if (p.hasPermission("bs.speed")) p.sendMessage("§6/speed §7- §eÄndere deine Geschwindigkeit");
+            if (p.hasPermission("bs.blocks")) p.sendMessage("§6/blocks §7- §eÖffne Spezialblöcke");
+            if (p.hasPermission("bs.tools")) p.sendMessage("§6/tools §7- §eÖffne Bautools");
             if (p.hasPermission("bs.worlds")) {
-                p.sendMessage("\u00a76/worlds \u00a77- \u00a7e\u00d6ffne das Weltenmenu");
-                p.sendMessage("\u00a76/addspawn \u00a77- \u00a7eErstelle einen Spawnpunkt");
-                p.sendMessage("\u00a76/trust \u00a77- \u00a7eGib einem Spieler Baurechte");
-                p.sendMessage("\u00a76/untrust \u00a77- \u00a7eEntziehe Baurechte");
-                p.sendMessage("\u00a76/wkick \u00a77- \u00a7eKicke einen Spieler aus deiner Welt");
-                p.sendMessage("\u00a76/prepare \u00a77- \u00a7eBereite eine Welt vor");
+                p.sendMessage("§6/worlds §7- §eÖffne das Weltenmenu");
+                p.sendMessage("§6/addspawn §7- §eErstelle einen Spawnpunkt");
+                p.sendMessage("§6/trust §7- §eGib einem Spieler Baurechte");
+                p.sendMessage("§6/untrust §7- §eEntziehe Baurechte");
+                p.sendMessage("§6/wkick §7- §eKicke einen Spieler aus deiner Welt");
+                p.sendMessage("§6/prepare §7- §eBereite eine Welt vor");
             }
             if (p.hasPermission("bs.admin")) {
-                p.sendMessage("\u00a76/visibility \u00a77- \u00a7eWeltsichtbarkeit umschalten");
-                p.sendMessage("\u00a76/worldlock \u00a77- \u00a7eWelt sperren/entsperren");
-                p.sendMessage("\u00a76/setowner \u00a77- \u00a7eWeltbesitzer \u00e4ndern");
+                p.sendMessage("§6/visibility §7- §eWeltsichtbarkeit umschalten");
+                p.sendMessage("§6/worldlock §7- §eWelt sperren/entsperren");
+                p.sendMessage("§6/setowner §7- §eWeltbesitzer ändern");
             }
-            p.sendMessage("\u00a7e-------------------------------");
+            p.sendMessage("§e-------------------------------");
             return;
         }
 
@@ -51,9 +51,9 @@ public class PlayerCommandPreprocess implements Listener {
                 p.getWorld().setThundering(false);
                 Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", false);
                 Configs.saveConfiguration();
-                p.sendMessage(Vars.PR + "\u00a7aWetter\u00e4nderungen wurden f\u00fcr diese Welt \u00a7edeaktiviert");
+                p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §edeaktiviert");
             } else {
-                p.sendMessage(Vars.PR + "\u00a7cDu hast hier keine Rechte");
+                p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");
             }
             return;
         }
@@ -64,9 +64,9 @@ public class PlayerCommandPreprocess implements Listener {
                     || p.hasPermission("bs.admin")) {
                 Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", true);
                 Configs.saveConfiguration();
-                p.sendMessage(Vars.PR + "\u00a7aWetter\u00e4nderungen wurden f\u00fcr diese Welt \u00a7eaktiviert");
+                p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §eaktiviert");
             } else {
-                p.sendMessage(Vars.PR + "\u00a7cDu hast hier keine Rechte");
+                p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");
             }
             return;
         }
@@ -78,9 +78,9 @@ public class PlayerCommandPreprocess implements Listener {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target != null) {
                     p.teleport(target);
-                    p.sendMessage(Vars.PR + "\u00a7aDu wurdest zu \u00a7e" + target.getName() + " \u00a7ateleportiert");
+                    p.sendMessage(Vars.PR + "§aDu wurdest zu §e" + target.getName() + " §ateleportiert");
                 } else {
-                    p.sendMessage(Vars.PR + "\u00a7cDieser Spieler ist nicht online");
+                    p.sendMessage(Vars.PR + "§cDieser Spieler ist nicht online");
                 }
             }
         }

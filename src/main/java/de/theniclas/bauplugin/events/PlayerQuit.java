@@ -13,6 +13,6 @@ public class PlayerQuit implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         e.quitMessage(LegacyComponentSerializer.legacySection().deserialize(
-                "\u00a79" + p.getName() + " \u00a77hat den Server verlassen"));
+                "§9" + p.getName() + " §7hat den Server verlassen"));
     }
 }

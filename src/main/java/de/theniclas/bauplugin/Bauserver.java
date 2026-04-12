@@ -1,4 +1,4 @@
-package de.theniclas.bauplugin.main;
+package de.theniclas.bauplugin;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -7,35 +7,37 @@ import de.theniclas.bauplugin.events.*;
 import de.theniclas.bauplugin.utils.Configs;
 import de.theniclas.bauplugin.utils.Vars;
 
-public class Main extends JavaPlugin {
+import java.util.Objects;
 
-    private static Main plugin;
+public class Bauserver extends JavaPlugin {
+
+    private static Bauserver plugin;
 
     @Override
     public void onEnable() {
-        plugin = this;
+        // Commands
+        Objects.requireNonNull(getCommand("gm")).setExecutor(new CMDgm());
+        Objects.requireNonNull(getCommand("speed")).setExecutor(new CMDspeed());
+        Objects.requireNonNull(getCommand("blocks")).setExecutor(new CMDblocks());
+        Objects.requireNonNull(getCommand("tools")).setExecutor(new CMDtools());
+        Objects.requireNonNull(getCommand("fly")).setExecutor(new CMDfly());
+        Objects.requireNonNull(getCommand("worlds")).setExecutor(new CMDworlds());
+        Objects.requireNonNull(getCommand("trust")).setExecutor(new CMDtrust());
+        Objects.requireNonNull(getCommand("untrust")).setExecutor(new CMDuntrust());
+        Objects.requireNonNull(getCommand("tpa")).setExecutor(new CMDtpa());
+        Objects.requireNonNull(getCommand("tpaccept")).setExecutor(new CMDtpaccept());
+        Objects.requireNonNull(getCommand("ping")).setExecutor(new CMDping());
+        Objects.requireNonNull(getCommand("addspawn")).setExecutor(new CMDaddspawn());
+        Objects.requireNonNull(getCommand("globalspawn")).setExecutor(new CMDglobalspawn());
+        Objects.requireNonNull(getCommand("spawn")).setExecutor(new CMDspawn());
+        Objects.requireNonNull(getCommand("visibility")).setExecutor(new CMDvisibility());
+        Objects.requireNonNull(getCommand("prepare")).setExecutor(new CMDprepare());
+        Objects.requireNonNull(getCommand("worldlock")).setExecutor(new CMDworldlock());
+        Objects.requireNonNull(getCommand("wkick")).setExecutor(new CMDwkick());
+        Objects.requireNonNull(getCommand("trusted")).setExecutor(new CMDtrusted());
+        Objects.requireNonNull(getCommand("setowner")).setExecutor(new CMDsetowner());
 
-        getCommand("gm").setExecutor(new CMDgm());
-        getCommand("speed").setExecutor(new CMDspeed());
-        getCommand("blocks").setExecutor(new CMDblocks());
-        getCommand("tools").setExecutor(new CMDtools());
-        getCommand("fly").setExecutor(new CMDfly());
-        getCommand("worlds").setExecutor(new CMDworlds());
-        getCommand("trust").setExecutor(new CMDtrust());
-        getCommand("untrust").setExecutor(new CMDuntrust());
-        getCommand("tpa").setExecutor(new CMDtpa());
-        getCommand("tpaccept").setExecutor(new CMDtpaccept());
-        getCommand("ping").setExecutor(new CMDping());
-        getCommand("addspawn").setExecutor(new CMDaddspawn());
-        getCommand("globalspawn").setExecutor(new CMDglobalspawn());
-        getCommand("spawn").setExecutor(new CMDspawn());
-        getCommand("visibility").setExecutor(new CMDvisibility());
-        getCommand("prepare").setExecutor(new CMDprepare());
-        getCommand("worldlock").setExecutor(new CMDworldlock());
-        getCommand("wkick").setExecutor(new CMDwkick());
-        getCommand("trusted").setExecutor(new CMDtrusted());
-        getCommand("setowner").setExecutor(new CMDsetowner());
-
+        // Events
         getServer().getPluginManager().registerEvents(new InventoryClick(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
         getServer().getPluginManager().registerEvents(new AsyncPlayerChat(), this);
@@ -55,13 +57,14 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new FoodLevelChange(), this);
 
+        // Configs
         Configs.loadConfiguration();
         Vars.loadGlobalSpawnWorld();
 
         getLogger().info("Bauserver-Plugin gestartet");
     }
 
-    public static Main getPlugin() {
+    public static Bauserver getPlugin() {
         return plugin;
     }
 }

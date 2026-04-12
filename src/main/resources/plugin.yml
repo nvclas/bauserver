@@ -1,6 +1,6 @@
 name: Bauserver
 version: '${version}'
-main: de.theniclas.bauplugin.main.Main
+main: de.theniclas.bauplugin.Bauserver
 api-version: '1.21'
 authors: [ nvclas ]
 description: Build server plugin

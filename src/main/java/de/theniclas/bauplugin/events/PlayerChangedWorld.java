@@ -16,9 +16,9 @@ public class PlayerChangedWorld implements Listener {
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.getWorld().equals(e.getFrom())) {
-                all.sendMessage("\u00a7e" + p.getName() + " \u00a77hat die Welt verlassen");
+                all.sendMessage("§e" + p.getName() + " §7hat die Welt verlassen");
             } else if (all.getWorld().equals(p.getWorld())) {
-                all.sendMessage("\u00a7e" + p.getName() + " \u00a77hat die Welt betreten");
+                all.sendMessage("§e" + p.getName() + " §7hat die Welt betreten");
             }
         }
 

@@ -13,8 +13,8 @@ public class CMDping implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
         int ping = p.getPing();
-        String color = ping <= 40 ? "\u00a7a" : ping >= 80 ? "\u00a7c" : "\u00a76";
-        p.sendMessage(Vars.PR + "\u00a7eDein Ping betr\u00e4gt " + color + ping + "ms");
+        String color = ping <= 40 ? "§a" : ping >= 80 ? "§c" : "§6";
+        p.sendMessage(Vars.PR + "§eDein Ping beträgt " + color + ping + "ms");
         return false;
     }
 }

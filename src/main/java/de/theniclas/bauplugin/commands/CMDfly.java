@@ -14,15 +14,15 @@ public class CMDfly implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
         if (p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR) {
-            p.sendMessage(Vars.PR + "\u00a7cDu kannst in deinem Spielmodus schon l\u00e4ngst fliegen");
+            p.sendMessage(Vars.PR + "§cDu kannst in deinem Spielmodus schon längst fliegen");
             return false;
         }
         if (!p.getAllowFlight()) {
             p.setAllowFlight(true);
-            p.sendMessage(Vars.PR + "\u00a7aFlugmodus \u00a7eaktiviert");
+            p.sendMessage(Vars.PR + "§aFlugmodus §eaktiviert");
         } else {
             p.setAllowFlight(false);
-            p.sendMessage(Vars.PR + "\u00a7aFlugmodus \u00a7edeaktiviert");
+            p.sendMessage(Vars.PR + "§aFlugmodus §edeaktiviert");
         }
         return false;
     }

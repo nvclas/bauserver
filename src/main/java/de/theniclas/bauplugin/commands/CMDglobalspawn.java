@@ -19,7 +19,7 @@ public class CMDglobalspawn implements CommandExecutor {
         Configs.worldsConfig.set("Spawn.Y", p.getLocation().getY());
         Configs.worldsConfig.set("Spawn.Z", p.getLocation().getZ());
         Configs.saveConfiguration();
-        p.sendMessage(Vars.PR + "\u00a7aDer globale Spawnpunkt wurde gesetzt");
+        p.sendMessage(Vars.PR + "§aDer globale Spawnpunkt wurde gesetzt");
         return false;
     }
 }

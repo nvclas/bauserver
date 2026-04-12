@@ -15,8 +15,8 @@ public class CMDworlds implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (Vars.voidWorldName.contains(p) || Vars.flatWorldName.contains(p) || Vars.normalWorldName.contains(p)) {
-            p.sendMessage(Vars.PR + "\u00a7cDu bist bereits dabei eine Welt zu erstellen");
-            p.sendMessage(Vars.PR + "\u00a7cGib \"stop\" zum Abbruch in den Chat ein");
+            p.sendMessage(Vars.PR + "§cDu bist bereits dabei eine Welt zu erstellen");
+            p.sendMessage(Vars.PR + "§cGib \"stop\" zum Abbruch in den Chat ein");
             return false;
         }
         InventoryCreator.currentPage.put(p, 1);

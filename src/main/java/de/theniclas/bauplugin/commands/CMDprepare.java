@@ -15,22 +15,22 @@ public class CMDprepare implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.PR + "\u00a7cDu bist nicht der Ersteller dieser Welt"); return false;
+            p.sendMessage(Vars.PR + "§cDu bist nicht der Ersteller dieser Welt"); return false;
         }
         p.getWorld().setTime(6000);
         p.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        p.sendMessage(Vars.PR + "\u00a7aMobspawning \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aMobspawning §edeaktiviert");
         p.getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
-        p.sendMessage(Vars.PR + "\u00a7aMobgriefing \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aMobgriefing §edeaktiviert");
         p.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
-        p.sendMessage(Vars.PR + "\u00a7aFeuerausbreitung \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aFeuerausbreitung §edeaktiviert");
         p.getWorld().setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
-        p.sendMessage(Vars.PR + "\u00a7aZuf\u00e4llige Blockupdates \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aZufällige Blockupdates §edeaktiviert");
         p.getWorld().setStorm(false);
         p.getWorld().setThundering(false);
-        p.sendMessage(Vars.PR + "\u00a7aWetter \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aWetter §edeaktiviert");
         p.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        p.sendMessage(Vars.PR + "\u00a7aTag-/Nachtzyklus \u00a7edeaktiviert");
+        p.sendMessage(Vars.PR + "§aTag-/Nachtzyklus §edeaktiviert");
         return false;
     }
 }

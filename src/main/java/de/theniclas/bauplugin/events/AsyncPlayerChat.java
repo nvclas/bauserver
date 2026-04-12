@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import de.theniclas.bauplugin.main.Main;
+import de.theniclas.bauplugin.Bauserver;
 import de.theniclas.bauplugin.utils.Configs;
 import de.theniclas.bauplugin.utils.Vars;
 import de.theniclas.bauplugin.utils.WorldMaker;
@@ -29,25 +29,25 @@ public class AsyncPlayerChat implements Listener {
 
         if (message.matches("[^a-zA-Z0-9]") || message.contains(" ") || message.contains("%")
                 || message.contains("/") || message.length() > 16) {
-            p.sendMessage(Vars.PR + "\u00a7cDer Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten");
+            p.sendMessage(Vars.PR + "§cDer Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten");
         } else if (message.equalsIgnoreCase("abbrechen") || message.equalsIgnoreCase("abbruch")
                 || message.equalsIgnoreCase("stop") || message.equalsIgnoreCase("stopp")) {
             Vars.voidWorldName.remove(p);
             Vars.flatWorldName.remove(p);
             Vars.normalWorldName.remove(p);
-            p.sendMessage(Vars.PR + "\u00a7aWeltenerstellung abgebrochen");
+            p.sendMessage(Vars.PR + "§aWeltenerstellung abgebrochen");
         } else if (Configs.worldsConfig.getConfigurationSection("Worlds") != null
                 && Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(message)) {
-            p.sendMessage(Vars.PR + "\u00a7cEs existiert bereits eine Welt mit diesem Namen");
+            p.sendMessage(Vars.PR + "§cEs existiert bereits eine Welt mit diesem Namen");
         } else if (icon.getType() == Material.AIR) {
-            p.sendMessage(Vars.PR + "\u00a7cBitte halte ein Item f\u00fcr das Welticon in der Hand");
+            p.sendMessage(Vars.PR + "§cBitte halte ein Item für das Welticon in der Hand");
         } else {
             if (Vars.voidWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Main.getPlugin(), () -> WorldMaker.createVoidWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createVoidWorld(message, p, icon));
             } else if (Vars.flatWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Main.getPlugin(), () -> WorldMaker.createFlatWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createFlatWorld(message, p, icon));
             } else if (Vars.normalWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Main.getPlugin(), () -> WorldMaker.createNormalWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createNormalWorld(message, p, icon));
             }
         }
     }
