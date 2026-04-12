@@ -19,7 +19,7 @@ public class CMDtools implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.tools")) { p.sendMessage(Vars.NOPERM); return false; }
         Inventory inv = Bukkit.createInventory(new InvHolder("tools"), 9,
-                net.kyori.adventure.text.Component.text("§6§lTools"));
+                Vars.mini("<gold><bold>Tools"));
         inv.addItem(new ItemStack(Material.WOODEN_AXE));
         inv.addItem(new ItemStack(Material.STICK));
         inv.addItem(new ItemStack(Material.BARRIER));

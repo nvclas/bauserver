@@ -26,25 +26,25 @@ public class CMDtrust implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.PR + "§cDu musst dich in deiner eigenen Welt befinden"); return false;
+            p.sendMessage(Vars.prefixed("<red>Du musst dich in deiner eigenen Welt befinden")); return false;
         }
-        if (args.length < 1) { p.sendMessage(Vars.PR + "§cWer soll denn Baurechte bekommen?"); return false; }
+        if (args.length < 1) { p.sendMessage(Vars.prefixed("<red>Wer soll denn Baurechte bekommen?")); return false; }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if (!target.hasPlayedBefore() && !target.isOnline()) {
-            p.sendMessage(Vars.PR + "§cDieser Spieler hat noch nie hier gespielt"); return false;
+            p.sendMessage(Vars.prefixed("<red>Dieser Spieler hat noch nie hier gespielt")); return false;
         }
         if (target.getName() != null && target.getName().equals(p.getName())) {
-            p.sendMessage(Vars.PR + "§cDu bist doch aber der Schöpfer dieser Welt"); return false;
+            p.sendMessage(Vars.prefixed("<red>Du bist doch aber der Schöpfer dieser Welt")); return false;
         }
         String worldKey = p.getLocation().getWorld().getName().replace("worlds/", "");
         if (Vars.isTrusted(target, worldKey)) {
-            p.sendMessage(Vars.PR + "§cDer Spieler hat bereits Baurechte, nutze §e/untrust <Spieler>"); return false;
+            p.sendMessage(Vars.prefixed("<red>Der Spieler hat bereits Baurechte, nutze <yellow>/untrust (Spieler)")); return false;
         }
         List<String> trusted = new ArrayList<>(plugin.getBauserverConfig().getWorldsConfig().getStringList("Worlds." + worldKey + ".Trusted"));
         trusted.add(target.getUniqueId().toString());
         plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldKey + ".Trusted", trusted);
         plugin.getBauserverConfig().saveConfiguration();
-        p.sendMessage(Vars.PR + "§aDu hast §e" + target.getName() + " §aBaurechte gegeben");
+        p.sendMessage(Vars.prefixed("<green>Du hast <yellow>" + target.getName() + " <green>Baurechte gegeben"));
         return false;
     }
 }

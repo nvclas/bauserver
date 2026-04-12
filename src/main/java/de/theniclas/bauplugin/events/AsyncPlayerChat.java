@@ -31,18 +31,18 @@ public class AsyncPlayerChat implements Listener {
 
         if (message.matches("[^a-zA-Z0-9]") || message.contains(" ") || message.contains("%")
                 || message.contains("/") || message.length() > 16) {
-            p.sendMessage(Vars.PR + "§cDer Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten");
+            p.sendMessage(Vars.prefixed("<red>Der Weltenname darf maximal 16 Zeichen besitzen und keine Leerzeichen oder unerlaubte Symbole enthalten"));
         } else if (message.equalsIgnoreCase("abbrechen") || message.equalsIgnoreCase("abbruch")
                 || message.equalsIgnoreCase("stop") || message.equalsIgnoreCase("stopp")) {
             Vars.voidWorldName.remove(p);
             Vars.flatWorldName.remove(p);
             Vars.normalWorldName.remove(p);
-            p.sendMessage(Vars.PR + "§aWeltenerstellung abgebrochen");
+            p.sendMessage(Vars.prefixed("<green>Weltenerstellung abgebrochen"));
         } else if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds") != null
                 && plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds").getKeys(false).contains(message)) {
-            p.sendMessage(Vars.PR + "§cEs existiert bereits eine Welt mit diesem Namen");
+            p.sendMessage(Vars.prefixed("<red>Es existiert bereits eine Welt mit diesem Namen"));
         } else if (icon.getType() == Material.AIR) {
-            p.sendMessage(Vars.PR + "§cBitte halte ein Item für das Welticon in der Hand");
+            p.sendMessage(Vars.prefixed("<red>Bitte halte ein Item für das Welticon in der Hand"));
         } else {
             if (Vars.voidWorldName.contains(p)) {
                 Bukkit.getScheduler().runTask(plugin, () -> plugin.getWorldMaker().createVoidWorld(message, p, icon));

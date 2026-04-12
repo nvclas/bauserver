@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import de.theniclas.bauplugin.Bauserver;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,8 +42,9 @@ public class Vars {
         }
         return instance;
     }
-    public static final String PR = "§8[§9§lTokyo-Build§8] ";
-    public static final String NOPERM = PR + "§cDafür hast du keine Rechte";
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private static final Component PREFIX = MINI_MESSAGE.deserialize("<dark_gray>[<blue><bold>Tokyo-Build</bold></blue><dark_gray>] <gray>");
+    public static final Component NOPERM = prefixed("<red>Dafür hast du keine Rechte");
 
     public static final List<Player> voidWorldName = new ArrayList<>();
     public static final List<Player> flatWorldName = new ArrayList<>();
@@ -63,9 +65,21 @@ public class Vars {
         }
         profile.setTextures(textures);
         meta.setOwnerProfile(profile);
-        meta.displayName(Component.text(displayName));
+        meta.displayName(mini(displayName));
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static Component mini(String message) {
+        return MINI_MESSAGE.deserialize(message);
+    }
+
+    public static Component prefixed(String message) {
+        return PREFIX.append(mini(message));
+    }
+
+    public static Component prefix() {
+        return PREFIX;
     }
 
     public static boolean isOwner(Player p, String worldName) {

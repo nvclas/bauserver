@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import de.theniclas.bauplugin.utils.BauserverConfig;
+import de.theniclas.bauplugin.utils.Vars;
 
 @RequiredArgsConstructor
 public class PlayerChangedWorld implements Listener {
@@ -21,9 +22,9 @@ public class PlayerChangedWorld implements Listener {
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.getWorld().equals(e.getFrom())) {
-                all.sendMessage("§e" + p.getName() + " §7hat die Welt verlassen");
+                all.sendMessage(Vars.mini("<yellow>" + p.getName() + " <gray>hat die Welt verlassen"));
             } else if (all.getWorld().equals(p.getWorld())) {
-                all.sendMessage("§e" + p.getName() + " §7hat die Welt betreten");
+                all.sendMessage(Vars.mini("<yellow>" + p.getName() + " <gray>hat die Welt betreten"));
             }
         }
 

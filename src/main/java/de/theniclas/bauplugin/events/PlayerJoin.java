@@ -2,7 +2,6 @@ package de.theniclas.bauplugin.events;
 
 import de.theniclas.bauplugin.Bauserver;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,12 +24,10 @@ public class PlayerJoin implements Listener {
         Player p = e.getPlayer();
 
         if (!p.hasPlayedBefore()) {
-            e.joinMessage(LegacyComponentSerializer.legacySection().deserialize(
-                    "§9" + p.getName() + " §7ist neu beigetreten"));
-            p.sendMessage(Vars.PR + "§aJoine auf unseren Discord, um dich freizuschalten!");
+            e.joinMessage(Vars.mini("<blue>" + p.getName() + " <gray>ist neu beigetreten"));
+            p.sendMessage(Vars.prefixed("<green>Joine auf unseren Discord, um dich freizuschalten!"));
         } else {
-            e.joinMessage(LegacyComponentSerializer.legacySection().deserialize(
-                    "§9" + p.getName() + " §7hat den Server betreten"));
+            e.joinMessage(Vars.mini("<blue>" + p.getName() + " <gray>hat den Server betreten"));
         }
 
         p.setFoodLevel(20);

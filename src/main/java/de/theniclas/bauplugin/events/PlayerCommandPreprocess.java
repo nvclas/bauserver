@@ -23,28 +23,28 @@ public class PlayerCommandPreprocess implements Listener {
 
         if (msg.startsWith("/help")) {
             e.setCancelled(true);
-            p.sendMessage("§e-------§6Verfügbare Befehle§e-------");
-            p.sendMessage("§6/fly §7- §eDe- und aktiviere das Fliegen");
-            p.sendMessage("§6/tpa §7- §eSende eine Teleportanfrage");
-            if (p.hasPermission("bs.gm")) p.sendMessage("§6/gm §7- §eÄndere deinen Spielmodus");
-            if (p.hasPermission("bs.tp")) p.sendMessage("§6/tp §7- §eTeleportiere dich zu Spielern");
-            if (p.hasPermission("bs.speed")) p.sendMessage("§6/speed §7- §eÄndere deine Geschwindigkeit");
-            if (p.hasPermission("bs.blocks")) p.sendMessage("§6/blocks §7- §eÖffne Spezialblöcke");
-            if (p.hasPermission("bs.tools")) p.sendMessage("§6/tools §7- §eÖffne Bautools");
+            p.sendMessage(Vars.mini("<yellow>-------<gold>Verfügbare Befehle<yellow>-------"));
+            p.sendMessage(Vars.mini("<gold>/fly <gray>- <yellow>De- und aktiviere das Fliegen"));
+            p.sendMessage(Vars.mini("<gold>/tpa <gray>- <yellow>Sende eine Teleportanfrage"));
+            if (p.hasPermission("bs.gm")) p.sendMessage(Vars.mini("<gold>/gm <gray>- <yellow>Ändere deinen Spielmodus"));
+            if (p.hasPermission("bs.tp")) p.sendMessage(Vars.mini("<gold>/tp <gray>- <yellow>Teleportiere dich zu Spielern"));
+            if (p.hasPermission("bs.speed")) p.sendMessage(Vars.mini("<gold>/speed <gray>- <yellow>Ändere deine Geschwindigkeit"));
+            if (p.hasPermission("bs.blocks")) p.sendMessage(Vars.mini("<gold>/blocks <gray>- <yellow>Öffne Spezialblöcke"));
+            if (p.hasPermission("bs.tools")) p.sendMessage(Vars.mini("<gold>/tools <gray>- <yellow>Öffne Bautools"));
             if (p.hasPermission("bs.worlds")) {
-                p.sendMessage("§6/worlds §7- §eÖffne das Weltenmenu");
-                p.sendMessage("§6/addspawn §7- §eErstelle einen Spawnpunkt");
-                p.sendMessage("§6/trust §7- §eGib einem Spieler Baurechte");
-                p.sendMessage("§6/untrust §7- §eEntziehe Baurechte");
-                p.sendMessage("§6/wkick §7- §eKicke einen Spieler aus deiner Welt");
-                p.sendMessage("§6/prepare §7- §eBereite eine Welt vor");
+                p.sendMessage(Vars.mini("<gold>/worlds <gray>- <yellow>Öffne das Weltenmenu"));
+                p.sendMessage(Vars.mini("<gold>/addspawn <gray>- <yellow>Erstelle einen Spawnpunkt"));
+                p.sendMessage(Vars.mini("<gold>/trust <gray>- <yellow>Gib einem Spieler Baurechte"));
+                p.sendMessage(Vars.mini("<gold>/untrust <gray>- <yellow>Entziehe Baurechte"));
+                p.sendMessage(Vars.mini("<gold>/wkick <gray>- <yellow>Kicke einen Spieler aus deiner Welt"));
+                p.sendMessage(Vars.mini("<gold>/prepare <gray>- <yellow>Bereite eine Welt vor"));
             }
             if (p.hasPermission("bs.admin")) {
-                p.sendMessage("§6/visibility §7- §eWeltsichtbarkeit umschalten");
-                p.sendMessage("§6/worldlock §7- §eWelt sperren/entsperren");
-                p.sendMessage("§6/setowner §7- §eWeltbesitzer ändern");
+                p.sendMessage(Vars.mini("<gold>/visibility <gray>- <yellow>Weltsichtbarkeit umschalten"));
+                p.sendMessage(Vars.mini("<gold>/worldlock <gray>- <yellow>Welt sperren/entsperren"));
+                p.sendMessage(Vars.mini("<gold>/setowner <gray>- <yellow>Weltbesitzer ändern"));
             }
-            p.sendMessage("§e-------------------------------");
+            p.sendMessage(Vars.mini("<yellow>-------------------------------"));
             return;
         }
 
@@ -56,9 +56,9 @@ public class PlayerCommandPreprocess implements Listener {
                 p.getWorld().setThundering(false);
                 plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", false);
                 plugin.getBauserverConfig().saveConfiguration();
-                p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §edeaktiviert");
+                p.sendMessage(Vars.prefixed("<green>Wetteränderungen wurden für diese Welt <yellow>deaktiviert"));
             } else {
-                p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");
+                p.sendMessage(Vars.prefixed("<red>Du hast hier keine Rechte"));
             }
             return;
         }
@@ -69,9 +69,9 @@ public class PlayerCommandPreprocess implements Listener {
                     || p.hasPermission("bs.admin")) {
                 plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", true);
                 plugin.getBauserverConfig().saveConfiguration();
-                p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §eaktiviert");
+                p.sendMessage(Vars.prefixed("<green>Wetteränderungen wurden für diese Welt <yellow>aktiviert"));
             } else {
-                p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");
+                p.sendMessage(Vars.prefixed("<red>Du hast hier keine Rechte"));
             }
             return;
         }
@@ -83,9 +83,9 @@ public class PlayerCommandPreprocess implements Listener {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target != null) {
                     p.teleport(target);
-                    p.sendMessage(Vars.PR + "§aDu wurdest zu §e" + target.getName() + " §ateleportiert");
+                    p.sendMessage(Vars.prefixed("<green>Du wurdest zu <yellow>" + target.getName() + " <green>teleportiert"));
                 } else {
-                    p.sendMessage(Vars.PR + "§cDieser Spieler ist nicht online");
+                    p.sendMessage(Vars.prefixed("<red>Dieser Spieler ist nicht online"));
                 }
             }
         }

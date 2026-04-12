@@ -24,7 +24,7 @@ public class CMDworldlock implements CommandExecutor {
                 && plugin.getBauserverConfig().getWorldsConfig().getBoolean("Worlds." + worldKey + ".Properties.Locked");
         plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldKey + ".Properties.Locked", !locked);
         plugin.getBauserverConfig().saveConfiguration();
-        p.sendMessage(Vars.PR + "§aWelt wurde §e" + (!locked ? "gesperrt" : "entsperrt"));
+        p.sendMessage(Vars.prefixed("<green>Welt wurde <yellow>" + (!locked ? "gesperrt" : "entsperrt")));
         return false;
     }
 }

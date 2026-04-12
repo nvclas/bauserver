@@ -21,10 +21,10 @@ public class CMDvisibility implements CommandExecutor {
         if (!p.hasPermission("bs.admin")) { p.sendMessage(Vars.NOPERM); return false; }
         if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility")) {
             plugin.getBauserverConfig().getWorldsConfig().set("Visibility", false);
-            p.sendMessage(Vars.PR + "§aWelten sind nun nicht mehr für alle sichtbar");
+            p.sendMessage(Vars.prefixed("<green>Welten sind nun nicht mehr für alle sichtbar"));
         } else {
             plugin.getBauserverConfig().getWorldsConfig().set("Visibility", true);
-            p.sendMessage(Vars.PR + "§aWelten sind nun für alle sichtbar");
+            p.sendMessage(Vars.prefixed("<green>Welten sind nun für alle sichtbar"));
         }
         plugin.getBauserverConfig().saveConfiguration();
         return false;

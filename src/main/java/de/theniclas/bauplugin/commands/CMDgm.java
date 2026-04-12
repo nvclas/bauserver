@@ -15,27 +15,27 @@ public class CMDgm implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
-        if (args.length == 0) { p.sendMessage(Vars.PR + "§cUps, fehlt da etwa eine Zahl?"); return false; }
+        if (args.length == 0) { p.sendMessage(Vars.prefixed("<red>Ups, fehlt da etwa eine Zahl?")); return false; }
 
         if (args.length == 1) {
             GameMode gm = parseGameMode(args[0]);
-            if (gm == null) { p.sendMessage(Vars.PR + "§cAber diesen Spielmodus gibt's gar nicht"); return false; }
+            if (gm == null) { p.sendMessage(Vars.prefixed("<red>Aber diesen Spielmodus gibt's gar nicht")); return false; }
             p.setGameMode(gm);
-            p.sendMessage(Vars.PR + "§aDu bist nun im Spielmodus §e" + gm.name());
+            p.sendMessage(Vars.prefixed("<green>Du bist nun im Spielmodus <yellow>" + gm.name()));
         } else {
             Player target = Bukkit.getPlayer(args[1]);
-            if (target == null) { p.sendMessage(Vars.PR + "§cDieser Spieler ist nicht online"); return false; }
+            if (target == null) { p.sendMessage(Vars.prefixed("<red>Dieser Spieler ist nicht online")); return false; }
             if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-                p.sendMessage(Vars.PR + "§cDu musst der Besitzer dieser Welt sein"); return false;
+                p.sendMessage(Vars.prefixed("<red>Du musst der Besitzer dieser Welt sein")); return false;
             }
             if (target.getWorld() != p.getWorld() && !p.hasPermission("bs.admin")) {
-                p.sendMessage(Vars.PR + "§cDas Ziel muss sich in deiner Welt befinden"); return false;
+                p.sendMessage(Vars.prefixed("<red>Das Ziel muss sich in deiner Welt befinden")); return false;
             }
             GameMode gm = parseGameMode(args[0]);
-            if (gm == null) { p.sendMessage(Vars.PR + "§cAber diesen Spielmodus gibt's gar nicht"); return false; }
+            if (gm == null) { p.sendMessage(Vars.prefixed("<red>Aber diesen Spielmodus gibt's gar nicht")); return false; }
             target.setGameMode(gm);
-            target.sendMessage(Vars.PR + "§aDu bist nun im Spielmodus §e" + gm.name());
-            p.sendMessage(Vars.PR + "§e" + target.getName() + " §aist nun im Spielmodus §e" + gm.name());
+            target.sendMessage(Vars.prefixed("<green>Du bist nun im Spielmodus <yellow>" + gm.name()));
+            p.sendMessage(Vars.prefixed("<yellow>" + target.getName() + " <green>ist nun im Spielmodus <yellow>" + gm.name()));
         }
         return false;
     }

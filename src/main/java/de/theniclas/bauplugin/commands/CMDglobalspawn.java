@@ -24,7 +24,7 @@ public class CMDglobalspawn implements CommandExecutor {
         plugin.getBauserverConfig().getWorldsConfig().set("Spawn.Y", p.getLocation().getY());
         plugin.getBauserverConfig().getWorldsConfig().set("Spawn.Z", p.getLocation().getZ());
         plugin.getBauserverConfig().saveConfiguration();
-        p.sendMessage(Vars.PR + "§aDer globale Spawnpunkt wurde gesetzt");
+        p.sendMessage(Vars.prefixed("<green>Der globale Spawnpunkt wurde gesetzt"));
         return false;
     }
 }

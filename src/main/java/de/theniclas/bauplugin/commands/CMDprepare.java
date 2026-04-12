@@ -1,6 +1,7 @@
 package de.theniclas.bauplugin.commands;
 
 import org.bukkit.GameRule;
+import org.bukkit.GameRules;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,22 +16,22 @@ public class CMDprepare implements CommandExecutor {
         if (!(sender instanceof Player p)) return false;
         if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.PR + "§cDu bist nicht der Ersteller dieser Welt"); return false;
+            p.sendMessage(Vars.prefixed("<red>Du bist nicht der Ersteller dieser Welt")); return false;
         }
         p.getWorld().setTime(6000);
-        p.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        p.sendMessage(Vars.PR + "§aMobspawning §edeaktiviert");
-        p.getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
-        p.sendMessage(Vars.PR + "§aMobgriefing §edeaktiviert");
-        p.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
-        p.sendMessage(Vars.PR + "§aFeuerausbreitung §edeaktiviert");
-        p.getWorld().setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
-        p.sendMessage(Vars.PR + "§aZufällige Blockupdates §edeaktiviert");
+        p.getWorld().setGameRule(GameRules.SPAWN_MOBS, false);
+        p.sendMessage(Vars.prefixed("<green>Mobspawning <yellow>deaktiviert"));
+        p.getWorld().setGameRule(GameRules.MOB_GRIEFING, false);
+        p.sendMessage(Vars.prefixed("<green>Mobgriefing <yellow>deaktiviert"));
+        p.getWorld().setGameRule(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER, 0);
+        p.sendMessage(Vars.prefixed("<green>Feuerausbreitung <yellow>deaktiviert"));
+        p.getWorld().setGameRule(GameRules.RANDOM_TICK_SPEED, 0);
+        p.sendMessage(Vars.prefixed("<green>Zufällige Blockupdates <yellow>deaktiviert"));
         p.getWorld().setStorm(false);
         p.getWorld().setThundering(false);
-        p.sendMessage(Vars.PR + "§aWetter §edeaktiviert");
-        p.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        p.sendMessage(Vars.PR + "§aTag-/Nachtzyklus §edeaktiviert");
+        p.sendMessage(Vars.prefixed("<green>Wetter <yellow>deaktiviert"));
+        p.getWorld().setGameRule(GameRules.ADVANCE_TIME, false);
+        p.sendMessage(Vars.prefixed("<green>Tag-/Nachtzyklus <yellow>deaktiviert"));
         return false;
     }
 }
