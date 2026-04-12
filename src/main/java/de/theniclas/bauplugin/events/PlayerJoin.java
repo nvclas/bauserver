@@ -1,8 +1,8 @@
 package de.theniclas.bauplugin.events;
 
 import de.theniclas.bauplugin.Bauserver;
+import de.theniclas.bauplugin.utils.Vars;
 import lombok.RequiredArgsConstructor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,9 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import de.theniclas.bauplugin.utils.BauserverConfig;
-import de.theniclas.bauplugin.utils.Vars;
 
 @RequiredArgsConstructor
 public class PlayerJoin implements Listener {
@@ -33,9 +30,11 @@ public class PlayerJoin implements Listener {
         p.setFoodLevel(20);
         p.setHealth(20);
 
-        if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Spawn") == null) return;
+        if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Spawn") == null)
+            return;
         World w = Bukkit.getWorld(plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World"));
-        if (w == null) return;
+        if (w == null)
+            return;
         double x = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.X");
         double y = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Y");
         double z = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Z");

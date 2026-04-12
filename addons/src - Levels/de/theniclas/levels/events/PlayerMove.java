@@ -9,18 +9,18 @@ import de.theniclas.bauplugin.utils.Vars;
 import de.theniclas.levels.utils.Scheduler;
 
 public class PlayerMove implements Listener {
-	@EventHandler
-	public void onMove(PlayerMoveEvent e) {
-		
-		Player p = e.getPlayer();
-		
-		if(Scheduler.afk.containsKey(p)) {
-			Scheduler.afk.remove(p);
-		}
-		if(Scheduler.afkPlayers.contains(p)) {
-			Scheduler.afkPlayers.remove(p);
-			p.sendMessage(Vars.pr + "§eDu bist nun nicht mehr AFK");
-		}
-		
-	}
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+
+        Player p = e.getPlayer();
+
+        if (Scheduler.afk.containsKey(p)) {
+            Scheduler.afk.remove(p);
+        }
+        if (Scheduler.afkPlayers.contains(p)) {
+            Scheduler.afkPlayers.remove(p);
+            p.sendMessage(Vars.pr + "ï¿½eDu bist nun nicht mehr AFK");
+        }
+
+    }
 }

@@ -1,23 +1,21 @@
 package de.theniclas.bauplugin.utils;
 
-import java.io.File;
-import java.io.IOException;
-
+import de.theniclas.bauplugin.Bauserver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.theniclas.bauplugin.Bauserver;
+import java.io.File;
+import java.io.IOException;
 
 @Getter
 @RequiredArgsConstructor
 public class BauserverConfig {
 
+    public static final File WORLDS_FILE = new File("plugins/Bauserver", "worlds.yml");
     private final Bauserver plugin;
     private FileConfiguration worldsConfig = YamlConfiguration.loadConfiguration(WORLDS_FILE);
-
-    public static final File WORLDS_FILE = new File("plugins/Bauserver", "worlds.yml");
 
     public void loadConfiguration() {
         if (!WORLDS_FILE.exists()) {

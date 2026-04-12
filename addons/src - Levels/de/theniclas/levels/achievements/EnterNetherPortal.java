@@ -9,14 +9,14 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import de.theniclas.levels.utils.Methods;
 
 public class EnterNetherPortal implements Listener {
-	@EventHandler 
-	public void onEnteringNetherPortal(PlayerPortalEvent e) {
-		
-		Player p = e.getPlayer();
-		if(e.getCause() == TeleportCause.NETHER_PORTAL) {
-			if(Methods.isUnlocked(p)) {
-				Methods.addAchievement(p, "Kann man in den Nether?!", 20);				
-			}
-		}
-	}
+    @EventHandler
+    public void onEnteringNetherPortal(PlayerPortalEvent e) {
+
+        Player p = e.getPlayer();
+        if (e.getCause() == TeleportCause.NETHER_PORTAL) {
+            if (Methods.isUnlocked(p)) {
+                Methods.addAchievement(p, "Kann man in den Nether?!", 20);
+            }
+        }
+    }
 }
