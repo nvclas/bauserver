@@ -1,5 +1,7 @@
 package de.theniclas.bauplugin.commands;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,22 +10,25 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class CMDspawn implements CommandExecutor {
+
+    private final Bauserver plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
-        if (Configs.worldsConfig.getConfigurationSection("Spawn") == null) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Spawn") == null) {
             p.sendMessage(Vars.PR + "§cEs wurde kein Spawnpunkt gesetzt"); return false;
         }
-        World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
+        World w = Bukkit.getWorld(plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World"));
         if (w == null) { p.sendMessage(Vars.PR + "§cSpawnwelt nicht gefunden"); return false; }
-        double x = Configs.worldsConfig.getDouble("Spawn.X");
-        double y = Configs.worldsConfig.getDouble("Spawn.Y");
-        double z = Configs.worldsConfig.getDouble("Spawn.Z");
+        double x = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.X");
+        double y = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Y");
+        double z = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Z");
         p.teleport(new Location(w, x, y, z));
         return false;
     }

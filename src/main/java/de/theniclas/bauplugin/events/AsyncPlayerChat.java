@@ -2,6 +2,7 @@ package de.theniclas.bauplugin.events;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import org.bukkit.Bukkit;
@@ -12,11 +13,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import de.theniclas.bauplugin.Bauserver;
-import de.theniclas.bauplugin.utils.Configs;
 import de.theniclas.bauplugin.utils.Vars;
-import de.theniclas.bauplugin.utils.WorldMaker;
 
+@RequiredArgsConstructor
 public class AsyncPlayerChat implements Listener {
+
+    private final Bauserver plugin;
 
     @EventHandler
     public void onChat(AsyncChatEvent e) {
@@ -36,18 +38,18 @@ public class AsyncPlayerChat implements Listener {
             Vars.flatWorldName.remove(p);
             Vars.normalWorldName.remove(p);
             p.sendMessage(Vars.PR + "§aWeltenerstellung abgebrochen");
-        } else if (Configs.worldsConfig.getConfigurationSection("Worlds") != null
-                && Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(message)) {
+        } else if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds") != null
+                && plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds").getKeys(false).contains(message)) {
             p.sendMessage(Vars.PR + "§cEs existiert bereits eine Welt mit diesem Namen");
         } else if (icon.getType() == Material.AIR) {
             p.sendMessage(Vars.PR + "§cBitte halte ein Item für das Welticon in der Hand");
         } else {
             if (Vars.voidWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createVoidWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(plugin, () -> plugin.getWorldMaker().createVoidWorld(message, p, icon));
             } else if (Vars.flatWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createFlatWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(plugin, () -> plugin.getWorldMaker().createFlatWorld(message, p, icon));
             } else if (Vars.normalWorldName.contains(p)) {
-                Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> WorldMaker.createNormalWorld(message, p, icon));
+                Bukkit.getScheduler().runTask(plugin, () -> plugin.getWorldMaker().createNormalWorld(message, p, icon));
             }
         }
     }

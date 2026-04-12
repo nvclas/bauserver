@@ -1,15 +1,20 @@
 package de.theniclas.bauplugin.commands;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class CMDaddspawn implements CommandExecutor {
 
+    private final Bauserver plugin;
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player p)) return false;
@@ -21,20 +26,20 @@ public class CMDaddspawn implements CommandExecutor {
 
         String worldKey = p.getLocation().getWorld().getName().replace("worlds/", "");
         String spawnsPath = "Worlds." + worldKey + ".Spawns";
-        if (Configs.worldsConfig.get(spawnsPath) != null &&
-                Configs.worldsConfig.getConfigurationSection(spawnsPath).getKeys(false).size() >= 9) {
+        if (plugin.getBauserverConfig().getWorldsConfig().get(spawnsPath) != null &&
+                plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection(spawnsPath).getKeys(false).size() >= 9) {
             p.sendMessage(Vars.PR + "§cEs existieren bereits zu viele Spawnpunkte für diese Welt");
             return false;
         }
-        if (Configs.worldsConfig.get(spawnsPath) != null &&
-                Configs.worldsConfig.getConfigurationSection(spawnsPath).getKeys(false).contains(args[0])) {
+        if (plugin.getBauserverConfig().getWorldsConfig().get(spawnsPath) != null &&
+                plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection(spawnsPath).getKeys(false).contains(args[0])) {
             p.sendMessage(Vars.PR + "§cDiesen Spawnpunktnamen gibt es bereits für diese Welt");
             return false;
         }
         String loc = worldKey + ", " + p.getLocation().getX() + ", " + p.getLocation().getY()
                 + ", " + p.getLocation().getZ();
-        Configs.worldsConfig.set(spawnsPath + "." + args[0] + ".Location", loc);
-        Configs.saveConfiguration();
+        plugin.getBauserverConfig().getWorldsConfig().set(spawnsPath + "." + args[0] + ".Location", loc);
+        plugin.getBauserverConfig().saveConfiguration();
         p.sendMessage(Vars.PR + "§aSpawnpunkt §e" + args[0] + " §aerstellt");
         return false;
     }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.theniclas.bauplugin.Bauserver;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
@@ -22,6 +23,24 @@ import org.bukkit.profile.PlayerTextures;
 
 public class Vars {
 
+    private final Bauserver plugin;
+    private static Vars instance;
+
+    public Vars(Bauserver plugin) {
+        this.plugin = plugin;
+    }
+
+    public static Vars inject(Bauserver plugin) {
+        instance = new Vars(plugin);
+        return instance;
+    }
+
+    private static Vars getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("Vars has not been injected yet");
+        }
+        return instance;
+    }
     public static final String PR = "§8[§9§lTokyo-Build§8] ";
     public static final String NOPERM = PR + "§cDafür hast du keine Rechte";
 
@@ -51,28 +70,28 @@ public class Vars {
 
     public static boolean isOwner(Player p, String worldName) {
         String key = "Worlds." + worldName.replace("worlds/", "") + ".Owner";
-        String owner = Configs.worldsConfig.getString(key);
+        String owner = getInstance().plugin.getBauserverConfig().getWorldsConfig().getString(key);
         return owner != null && owner.equals(p.getUniqueId().toString());
     }
 
     public static boolean isTrusted(OfflinePlayer p, String worldName) {
-        List<String> trusted = Configs.worldsConfig.getStringList(
+        List<String> trusted = getInstance().plugin.getBauserverConfig().getWorldsConfig().getStringList(
                 "Worlds." + worldName.replace("worlds/", "") + ".Trusted");
         return trusted.contains(p.getUniqueId().toString());
     }
 
     public static void loadGlobalSpawnWorld() {
-        if (Configs.worldsConfig.getString("Spawn.World") != null) {
-            Bukkit.createWorld(new WorldCreator(Configs.worldsConfig.getString("Spawn.World")));
+        if (getInstance().plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World") != null) {
+            Bukkit.createWorld(new WorldCreator(getInstance().plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World")));
         }
     }
 
     public static int getWorldAmount(Player p) {
         int amount = 0;
-        if (Configs.worldsConfig.getConfigurationSection("Worlds") == null) return 0;
-        for (String worlds : Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false)) {
+        if (getInstance().plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds") == null) return 0;
+        for (String worlds : getInstance().plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds").getKeys(false)) {
             if (p.getUniqueId().toString().equals(
-                    Configs.worldsConfig.getString("Worlds." + worlds + ".Owner"))) {
+                    getInstance().plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worlds + ".Owner"))) {
                 amount++;
             }
         }

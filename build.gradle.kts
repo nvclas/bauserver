@@ -18,6 +18,8 @@ repositories {
 
 dependencies {
     paperweight.paperDevBundle(libs.versions.paper)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 val targetJavaVersion = 21

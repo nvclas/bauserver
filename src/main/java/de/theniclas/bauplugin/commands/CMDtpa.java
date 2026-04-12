@@ -1,5 +1,6 @@
 package de.theniclas.bauplugin.commands;
 
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,7 +15,10 @@ import de.theniclas.bauplugin.Bauserver;
 import de.theniclas.bauplugin.utils.Vars;
 import org.jetbrains.annotations.NotNull;
 
+@RequiredArgsConstructor
 public class CMDtpa implements CommandExecutor {
+
+    private final Bauserver plugin;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -36,7 +40,7 @@ public class CMDtpa implements CommandExecutor {
                 .append(Component.text("[ANNEHMEN]")
                         .color(NamedTextColor.GREEN)
                         .clickEvent(ClickEvent.runCommand("/tpaccept " + p.getName()))));
-        Bukkit.getScheduler().runTaskLater(Bauserver.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (Vars.tpa.containsKey(target.getUniqueId().toString())
                     && Vars.tpa.get(target.getUniqueId().toString()).equals(p.getUniqueId().toString())) {
                 Vars.tpa.remove(target.getUniqueId().toString());

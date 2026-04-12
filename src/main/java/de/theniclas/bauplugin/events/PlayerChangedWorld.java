@@ -1,14 +1,19 @@
 package de.theniclas.bauplugin.events;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 
+@RequiredArgsConstructor
 public class PlayerChangedWorld implements Listener {
+
+    private final Bauserver plugin;
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
@@ -22,7 +27,7 @@ public class PlayerChangedWorld implements Listener {
             }
         }
 
-        String spawnWorld = Configs.worldsConfig.getString("Spawn.World");
+        String spawnWorld = plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World");
         if (spawnWorld != null && !e.getFrom().getName().equals(spawnWorld)
                 && e.getFrom().getPlayers().isEmpty()) {
             Bukkit.unloadWorld(e.getFrom(), true);

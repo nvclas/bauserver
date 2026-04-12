@@ -1,5 +1,7 @@
 package de.theniclas.bauplugin.events;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import org.bukkit.Bukkit;
@@ -10,10 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class PlayerJoin implements Listener {
+
+    private final Bauserver plugin;
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -31,12 +36,12 @@ public class PlayerJoin implements Listener {
         p.setFoodLevel(20);
         p.setHealth(20);
 
-        if (Configs.worldsConfig.getConfigurationSection("Spawn") == null) return;
-        World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
+        if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Spawn") == null) return;
+        World w = Bukkit.getWorld(plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World"));
         if (w == null) return;
-        double x = Configs.worldsConfig.getDouble("Spawn.X");
-        double y = Configs.worldsConfig.getDouble("Spawn.Y");
-        double z = Configs.worldsConfig.getDouble("Spawn.Z");
+        double x = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.X");
+        double y = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Y");
+        double z = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Z");
         p.teleport(new Location(w, x, y, z));
     }
 }

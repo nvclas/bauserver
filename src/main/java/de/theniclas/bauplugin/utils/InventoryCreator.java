@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,10 +15,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+@RequiredArgsConstructor
 public class InventoryCreator {
 
-    public static HashMap<Player, Integer> currentPage = new HashMap<>();
-    private static final ArrayList<ItemStack> items = new ArrayList<>();
+    private final Bauserver plugin;
+
+    private final HashMap<Player, Integer> currentPage = new HashMap<>();
+    private final ArrayList<ItemStack> items = new ArrayList<>();
 
     private static ItemStack pane(Material mat) {
         ItemStack is = new ItemStack(mat);
@@ -26,7 +31,15 @@ public class InventoryCreator {
         return is;
     }
 
-    public static void openWorldInventory(Player p) {
+    public int getCurrentPage(Player p) {
+        return currentPage.getOrDefault(p, 1);
+    }
+
+    public void setCurrentPage(Player p, int page) {
+        currentPage.put(p, page);
+    }
+
+    public void openWorldInventory(Player p) {
         items.clear();
         Inventory inv = Bukkit.createInventory(new InvHolder("worlds"), 6 * 9);
 
@@ -54,21 +67,21 @@ public class InventoryCreator {
         next.setItemMeta(nm);
         inv.setItem(53, next);
 
-        ConfigurationSection worldNames = Configs.worldsConfig.getConfigurationSection("Worlds");
+        ConfigurationSection worldNames = plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds");
         if (worldNames != null) {
             for (String world : worldNames.getKeys(false)) {
-                boolean locked = Configs.worldsConfig.getBoolean("Worlds." + world + ".Properties.Locked");
-                boolean lockedSet = Configs.worldsConfig.get("Worlds." + world + ".Properties.Locked") != null;
+                boolean locked = plugin.getBauserverConfig().getWorldsConfig().getBoolean("Worlds." + world + ".Properties.Locked");
+                boolean lockedSet = plugin.getBauserverConfig().getWorldsConfig().get("Worlds." + world + ".Properties.Locked") != null;
                 if (locked && lockedSet && !p.hasPermission("bs.admin") && !p.hasPermission("bs.seelocked")) continue;
-                if (!Configs.worldsConfig.getBoolean("Visibility") && !p.hasPermission("bs.seeworlds")) {
-                    String owner = Configs.worldsConfig.getString("Worlds." + world + ".Owner");
+                if (!plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") && !p.hasPermission("bs.seeworlds")) {
+                    String owner = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + world + ".Owner");
                     if (!Vars.isOwner(p, world) && !Vars.isTrusted(p, world) && !"0".equals(owner)) continue;
                 }
                 items.add(buildWorldItem(p, world));
             }
         }
 
-        int page = currentPage.get(p);
+        int page = getCurrentPage(p);
         int start = (page - 1) * 28;
         int end = Math.min(start + 28, items.size());
         for (int i = start; i < end; i++) inv.addItem(items.get(i));
@@ -79,8 +92,8 @@ public class InventoryCreator {
         p.openInventory(inv);
     }
 
-    private static ItemStack buildWorldItem(Player p, String world) {
-        String symbolStr = Configs.worldsConfig.getString("Worlds." + world + ".Symbol");
+    private ItemStack buildWorldItem(Player p, String world) {
+        String symbolStr = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + world + ".Symbol");
         Material mat = Material.GRASS_BLOCK;
         if (symbolStr != null) {
             String matName = symbolStr.contains(":") ? symbolStr.split(":")[0] : symbolStr;
@@ -91,13 +104,13 @@ public class InventoryCreator {
         ItemMeta im = item.getItemMeta();
         im.setDisplayName("§a" + world);
         List<String> lore = new ArrayList<>();
-        String owner = Configs.worldsConfig.getString("Worlds." + world + ".Owner");
+        String owner =  plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + world + ".Owner");
         lore.add("§6Ersteller§8: §e" + ("0".equals(owner) || owner == null ? "Niemand"
                 : Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName()));
-        String type = Configs.worldsConfig.getString("Worlds." + world + ".Type");
+        String type = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + world + ".Type");
         lore.add("§6Typ§8: §e" + (type == null || "0".equals(type) ? "Unbekannt" : type));
-        if (Configs.worldsConfig.getBoolean("Worlds." + world + ".Properties.Locked")
-                && Configs.worldsConfig.get("Worlds." + world + ".Properties.Locked") != null)
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Worlds." + world + ".Properties.Locked")
+                && plugin.getBauserverConfig().getWorldsConfig().get("Worlds." + world + ".Properties.Locked") != null)
             lore.add("§4Welt gesperrt");
         if (Vars.isOwner(p, world) || p.hasPermission("bs.admin"))
             lore.add("§cRechtsklick zum Löschen");

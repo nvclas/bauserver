@@ -1,5 +1,7 @@
 package de.theniclas.bauplugin.utils;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,10 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 
+@RequiredArgsConstructor
 public class WorldMaker {
 
-    public static void createNormalWorld(String name, Player p, ItemStack icon) {
-        if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+    private final Bauserver plugin;
+
+    public void createNormalWorld(String name, Player p, ItemStack icon) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.normalWorldName.remove(p);
             p.sendMessage(Vars.PR + "§eErstelle normale Welt...");
             new WorldCreator("worlds/" + name).type(WorldType.NORMAL).createWorld();
@@ -26,8 +31,8 @@ public class WorldMaker {
         }
     }
 
-    public static void createFlatWorld(String name, Player p, ItemStack icon) {
-        if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+    public void createFlatWorld(String name, Player p, ItemStack icon) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.flatWorldName.remove(p);
             p.sendMessage(Vars.PR + "§eErstelle Flat-Welt...");
             new WorldCreator("worlds/" + name).type(WorldType.FLAT).createWorld();
@@ -41,8 +46,8 @@ public class WorldMaker {
         }
     }
 
-    public static void createVoidWorld(String name, Player p, ItemStack icon) {
-        if (Configs.worldsConfig.getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+    public void createVoidWorld(String name, Player p, ItemStack icon) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.voidWorldName.remove(p);
             p.sendMessage(Vars.PR + "§eErstelle Void-Welt...");
             new WorldCreator("worlds/" + name)
@@ -61,14 +66,14 @@ public class WorldMaker {
         }
     }
 
-    private static void saveWorldMeta(String name, Player p, ItemStack icon, String type) {
-        Configs.worldsConfig.set("Worlds." + name + ".Owner", p.getUniqueId().toString());
-        Configs.worldsConfig.set("Worlds." + name + ".Symbol", icon.getType().name());
-        Configs.worldsConfig.set("Worlds." + name + ".Type", type);
-        Configs.saveConfiguration();
+    private void saveWorldMeta(String name, Player p, ItemStack icon, String type) {
+        plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + name + ".Owner", p.getUniqueId().toString());
+        plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + name + ".Symbol", icon.getType().name());
+        plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + name + ".Type", type);
+        plugin.getBauserverConfig().saveConfiguration();
     }
 
-    private static void sendWorldLimitMessage(Player p) {
+    private void sendWorldLimitMessage(Player p) {
         p.sendMessage(Vars.PR + "§cDu kannst keine weiteren Welten erstellen");
         Vars.voidWorldName.remove(p);
         Vars.flatWorldName.remove(p);

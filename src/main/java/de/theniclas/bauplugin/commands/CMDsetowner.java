@@ -1,5 +1,7 @@
 package de.theniclas.bauplugin.commands;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -7,10 +9,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class CMDsetowner implements CommandExecutor {
+
+    private final Bauserver plugin;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -23,12 +28,12 @@ public class CMDsetowner implements CommandExecutor {
             p.sendMessage(Vars.PR + "§cDieser Spieler hat noch nie hier gespielt"); return false;
         }
         String worldKey = p.getWorld().getName().replace("worlds/", "");
-        String currentOwner = Configs.worldsConfig.getString("Worlds." + worldKey + ".Owner");
+        String currentOwner = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worldKey + ".Owner");
         if (target.getUniqueId().toString().equals(currentOwner)) {
             p.sendMessage(Vars.PR + "§cDieser Spieler ist bereits der Besitzer dieser Welt"); return false;
         }
-        Configs.worldsConfig.set("Worlds." + worldKey + ".Owner", target.getUniqueId().toString());
-        Configs.saveConfiguration();
+        plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldKey + ".Owner", target.getUniqueId().toString());
+        plugin.getBauserverConfig().saveConfiguration();
         p.sendMessage(Vars.PR + "§aDer neue Besitzer dieser Welt ist nun §e" + args[0]);
         return false;
     }

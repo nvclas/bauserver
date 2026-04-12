@@ -1,15 +1,20 @@
 package de.theniclas.bauplugin.events;
 
+import de.theniclas.bauplugin.Bauserver;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import de.theniclas.bauplugin.utils.Configs;
+import de.theniclas.bauplugin.utils.BauserverConfig;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class PlayerCommandPreprocess implements Listener {
+
+    private final Bauserver plugin;
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
@@ -49,8 +54,8 @@ public class PlayerCommandPreprocess implements Listener {
                     || p.hasPermission("bs.admin")) {
                 p.getWorld().setStorm(false);
                 p.getWorld().setThundering(false);
-                Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", false);
-                Configs.saveConfiguration();
+                plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", false);
+                plugin.getBauserverConfig().saveConfiguration();
                 p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §edeaktiviert");
             } else {
                 p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");
@@ -62,8 +67,8 @@ public class PlayerCommandPreprocess implements Listener {
             e.setCancelled(true);
             if (Vars.isTrusted(p, p.getWorld().getName()) || Vars.isOwner(p, p.getWorld().getName())
                     || p.hasPermission("bs.admin")) {
-                Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", true);
-                Configs.saveConfiguration();
+                plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + p.getWorld().getName().replace("worlds/", "") + ".Properties.Weather", true);
+                plugin.getBauserverConfig().saveConfiguration();
                 p.sendMessage(Vars.PR + "§aWetteränderungen wurden für diese Welt §eaktiviert");
             } else {
                 p.sendMessage(Vars.PR + "§cDu hast hier keine Rechte");

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,12 +26,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.theniclas.bauplugin.Bauserver;
-import de.theniclas.bauplugin.utils.Configs;
 import de.theniclas.bauplugin.utils.InvHolder;
-import de.theniclas.bauplugin.utils.InventoryCreator;
 import de.theniclas.bauplugin.utils.Vars;
 
+@RequiredArgsConstructor
 public class InventoryClick implements Listener {
+
+    private final Bauserver plugin;
 
     @EventHandler
     public void onInvClick(InventoryClickEvent e) {
@@ -58,23 +60,23 @@ public class InventoryClick implements Listener {
                 return;
             }
             if (displayName.equals("§bNächste Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
-                InventoryCreator.currentPage.put(p, InventoryCreator.currentPage.get(p) + 1);
-                InventoryCreator.openWorldInventory(p);
+                plugin.getInventoryCreator().setCurrentPage(p, plugin.getInventoryCreator().getCurrentPage(p) + 1);
+                plugin.getInventoryCreator().openWorldInventory(p);
                 return;
             }
             if (displayName.equals("§bVorherige Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
-                InventoryCreator.currentPage.put(p, InventoryCreator.currentPage.get(p) - 1);
-                InventoryCreator.openWorldInventory(p);
+                plugin.getInventoryCreator().setCurrentPage(p, plugin.getInventoryCreator().getCurrentPage(p) - 1);
+                plugin.getInventoryCreator().openWorldInventory(p);
                 return;
             }
 
             String worldName = displayName.replace("§a", "");
-            if (Configs.worldsConfig.getConfigurationSection("Worlds") == null
-                    || !Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(worldName)) return;
+            if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds") == null
+                    || !plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds").getKeys(false).contains(worldName)) return;
 
             if (e.getAction() == InventoryAction.PICKUP_ALL) {
-                if (Configs.worldsConfig.get("Worlds." + worldName + ".Spawns") == null
-                        || Configs.worldsConfig.getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false).isEmpty()) {
+                if (plugin.getBauserverConfig().getWorldsConfig().get("Worlds." + worldName + ".Spawns") == null
+                        || plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false).isEmpty()) {
                     teleportToWorld(p, worldName, null);
                 } else {
                     openSpawnpointsInventory(p, worldName);
@@ -112,7 +114,7 @@ public class InventoryClick implements Listener {
                     && (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin"))) {
                 openDeleteSpawnInventory(p, worldName, spawnName);
             } else {
-                String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
+                String locStr = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
                 if (locStr == null) return;
                 String[] arg = locStr.split(",");
                 double[] coords = new double[]{
@@ -145,8 +147,8 @@ public class InventoryClick implements Listener {
             if (!e.getCurrentItem().hasItemMeta()) return;
             if (e.getCurrentItem().getItemMeta().getDisplayName().equals("§4Spawnpunkt löschen")) {
                 p.closeInventory();
-                Configs.worldsConfig.set("Worlds." + worldName + ".Spawns." + spawnName, null);
-                Configs.saveConfiguration();
+                plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldName + ".Spawns." + spawnName, null);
+                plugin.getBauserverConfig().saveConfiguration();
                 p.sendMessage(Vars.PR + "§aSpawnpunkt erfolgreich gelöscht");
             }
         }
@@ -159,7 +161,7 @@ public class InventoryClick implements Listener {
         } else {
             p.closeInventory();
             p.sendMessage(Vars.PR + "§6Welt wird geladen...");
-            Bukkit.getScheduler().runTask(Bauserver.getPlugin(), () -> {
+            Bukkit.getScheduler().runTask(plugin, () -> {
                 World loaded = new WorldCreator("worlds/" + worldName).createWorld();
                 if (loaded == null) { p.sendMessage(Vars.PR + "§cFehler beim Laden der Welt"); return; }
                 p.teleport(coords != null ? new Location(loaded, coords[0], coords[1], coords[2]) : loaded.getSpawnLocation());
@@ -186,12 +188,12 @@ public class InventoryClick implements Listener {
 
     private void openSpawnpointsInventory(Player p, String worldName) {
         Inventory inv = Bukkit.createInventory(new InvHolder("spawns:" + worldName), 9);
-        for (String spawn : Configs.worldsConfig.getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false)) {
+        for (String spawn : plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false)) {
             ItemStack is = new ItemStack(Material.ENDER_EYE);
             ItemMeta im = is.getItemMeta();
             im.setDisplayName("§5" + spawn);
             List<String> lore = new ArrayList<>();
-            String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
+            String locStr = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
             String[] arg = locStr.split(",");
             lore.add("§6Location§8: §e" + Math.round(Double.parseDouble(arg[1].trim()))
                     + ", " + Math.round(Double.parseDouble(arg[2].trim()))
@@ -236,17 +238,17 @@ public class InventoryClick implements Listener {
     }
 
     private void deleteWorld(Player p, String worldName) {
-        if (Configs.worldsConfig.getString("Spawn.World") == null) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World") == null) {
             p.sendMessage(Vars.PR + "§cKein globaler Spawn gesetzt, Welten können nicht gelöscht werden"); return;
         }
-        if (Configs.worldsConfig.getString("Spawn.World").equals("worlds/" + worldName)) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World").equals("worlds/" + worldName)) {
             p.sendMessage(Vars.PR + "§cDiese Welt kann nicht gelöscht werden (globaler Spawn)"); return;
         }
         p.closeInventory();
-        World spawnWorld = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
-        double sx = Configs.worldsConfig.getDouble("Spawn.X");
-        double sy = Configs.worldsConfig.getDouble("Spawn.Y");
-        double sz = Configs.worldsConfig.getDouble("Spawn.Z");
+        World spawnWorld = Bukkit.getWorld(plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World"));
+        double sx = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.X");
+        double sy = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Y");
+        double sz = plugin.getBauserverConfig().getWorldsConfig().getDouble("Spawn.Z");
         Location spawnLoc = spawnWorld != null ? new Location(spawnWorld, sx, sy, sz) : null;
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.getWorld().getName().equals("worlds/" + worldName)) {
@@ -255,8 +257,8 @@ public class InventoryClick implements Listener {
             }
         }
         p.sendMessage(Vars.PR + "§6Welt wird gelöscht...");
-        Configs.worldsConfig.set("Worlds." + worldName, null);
-        Configs.saveConfiguration();
+        plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldName, null);
+        plugin.getBauserverConfig().saveConfiguration();
         if (Bukkit.getWorld("worlds/" + worldName) != null) Bukkit.unloadWorld("worlds/" + worldName, false);
         File worldDir = new File("worlds/" + worldName);
         if (worldDir.exists()) {

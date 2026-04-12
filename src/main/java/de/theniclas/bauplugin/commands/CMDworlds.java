@@ -5,10 +5,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.InventoryCreator;
+import de.theniclas.bauplugin.Bauserver;
 import de.theniclas.bauplugin.utils.Vars;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class CMDworlds implements CommandExecutor {
+
+    private final Bauserver plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -19,8 +23,8 @@ public class CMDworlds implements CommandExecutor {
             p.sendMessage(Vars.PR + "§cGib \"stop\" zum Abbruch in den Chat ein");
             return false;
         }
-        InventoryCreator.currentPage.put(p, 1);
-        InventoryCreator.openWorldInventory(p);
+        plugin.getInventoryCreator().setCurrentPage(p, 1);
+        plugin.getInventoryCreator().openWorldInventory(p);
         return false;
     }
 }
