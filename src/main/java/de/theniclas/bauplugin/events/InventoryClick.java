@@ -1,14 +1,8 @@
 package de.theniclas.bauplugin.events;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
-
+import de.theniclas.bauplugin.Bauserver;
+import de.theniclas.bauplugin.utils.InvHolder;
+import de.theniclas.bauplugin.utils.Vars;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,9 +19,14 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.theniclas.bauplugin.Bauserver;
-import de.theniclas.bauplugin.utils.InvHolder;
-import de.theniclas.bauplugin.utils.Vars;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class InventoryClick implements Listener {
@@ -36,12 +35,16 @@ public class InventoryClick implements Listener {
 
     @EventHandler
     public void onInvClick(InventoryClickEvent e) {
-        if (!(e.getWhoClicked() instanceof Player p)) return;
-        if (e.getClickedInventory() == null) return;
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
+        if (!(e.getWhoClicked() instanceof Player p))
+            return;
+        if (e.getClickedInventory() == null)
+            return;
+        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
+            return;
 
         InventoryHolder holder = e.getInventory().getHolder();
-        if (!(holder instanceof InvHolder ih)) return;
+        if (!(holder instanceof InvHolder ih))
+            return;
         String id = ih.getId();
 
         if (id.equals("tools") || id.equals("blocks")) {
@@ -52,7 +55,8 @@ public class InventoryClick implements Listener {
 
         if (id.equals("worlds")) {
             e.setCancelled(true);
-            if (!e.getCurrentItem().hasItemMeta()) return;
+            if (!e.getCurrentItem().hasItemMeta())
+                return;
             String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
 
             if (displayName.equals("Welt erstellen")) {
@@ -72,11 +76,20 @@ public class InventoryClick implements Listener {
 
             String worldName = displayName;
             if (plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds") == null
-                    || !plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds").getKeys(false).contains(worldName)) return;
+                    || !plugin.getBauserverConfig()
+                    .getWorldsConfig()
+                    .getConfigurationSection("Worlds")
+                    .getKeys(false)
+                    .contains(worldName))
+                return;
 
             if (e.getAction() == InventoryAction.PICKUP_ALL) {
                 if (plugin.getBauserverConfig().getWorldsConfig().get("Worlds." + worldName + ".Spawns") == null
-                        || plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false).isEmpty()) {
+                        || plugin.getBauserverConfig()
+                        .getWorldsConfig()
+                        .getConfigurationSection("Worlds." + worldName + ".Spawns")
+                        .getKeys(false)
+                        .isEmpty()) {
                     teleportToWorld(p, worldName, null);
                 } else {
                     openSpawnpointsInventory(p, worldName);
@@ -90,16 +103,20 @@ public class InventoryClick implements Listener {
 
         if (id.equals("create_world")) {
             e.setCancelled(true);
-            if (!e.getCurrentItem().hasItemMeta()) return;
+            if (!e.getCurrentItem().hasItemMeta())
+                return;
             String name = e.getCurrentItem().getItemMeta().getDisplayName();
             if (name.equals("Void")) {
-                p.closeInventory(); p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
+                p.closeInventory();
+                p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
                 Vars.voidWorldName.add(p);
             } else if (name.equals("Flat")) {
-                p.closeInventory(); p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
+                p.closeInventory();
+                p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
                 Vars.flatWorldName.add(p);
             } else if (name.equals("Normal")) {
-                p.closeInventory(); p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
+                p.closeInventory();
+                p.sendMessage(Vars.prefixed("<green>Halte ein Item in die Hand und gib einen Weltnamen ein"));
                 Vars.normalWorldName.add(p);
             }
             return;
@@ -108,14 +125,18 @@ public class InventoryClick implements Listener {
         if (id.startsWith("spawns:")) {
             e.setCancelled(true);
             String worldName = id.substring("spawns:".length());
-            if (!e.getCurrentItem().hasItemMeta()) return;
+            if (!e.getCurrentItem().hasItemMeta())
+                return;
             String spawnName = e.getCurrentItem().getItemMeta().getDisplayName();
             if (e.getAction() == InventoryAction.PICKUP_HALF
                     && (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin"))) {
                 openDeleteSpawnInventory(p, worldName, spawnName);
             } else {
-                String locStr = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
-                if (locStr == null) return;
+                String locStr = plugin.getBauserverConfig()
+                        .getWorldsConfig()
+                        .getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
+                if (locStr == null)
+                    return;
                 String[] arg = locStr.split(",");
                 double[] coords = new double[]{
                         Double.parseDouble(arg[1].trim()),
@@ -130,7 +151,8 @@ public class InventoryClick implements Listener {
         if (id.startsWith("delete_world:")) {
             e.setCancelled(true);
             String worldName = id.substring("delete_world:".length());
-            if (!e.getCurrentItem().hasItemMeta()) return;
+            if (!e.getCurrentItem().hasItemMeta())
+                return;
             if (e.getCurrentItem().getItemMeta().getDisplayName().equals("Welt löschen")) {
                 deleteWorld(p, worldName);
             }
@@ -141,10 +163,12 @@ public class InventoryClick implements Listener {
             e.setCancelled(true);
             String rest = id.substring("delete_spawn:".length());
             int sep = rest.indexOf(':');
-            if (sep < 0) return;
+            if (sep < 0)
+                return;
             String worldName = rest.substring(0, sep);
             String spawnName = rest.substring(sep + 1);
-            if (!e.getCurrentItem().hasItemMeta()) return;
+            if (!e.getCurrentItem().hasItemMeta())
+                return;
             if (e.getCurrentItem().getItemMeta().getDisplayName().equals("Spawnpunkt löschen")) {
                 p.closeInventory();
                 plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldName + ".Spawns." + spawnName, null);
@@ -163,8 +187,12 @@ public class InventoryClick implements Listener {
             p.sendMessage(Vars.prefixed("<gold>Welt wird geladen..."));
             Bukkit.getScheduler().runTask(plugin, () -> {
                 World loaded = new WorldCreator("worlds/" + worldName).createWorld();
-                if (loaded == null) { p.sendMessage(Vars.prefixed("<red>Fehler beim Laden der Welt")); return; }
-                p.teleport(coords != null ? new Location(loaded, coords[0], coords[1], coords[2]) : loaded.getSpawnLocation());
+                if (loaded == null) {
+                    p.sendMessage(Vars.prefixed("<red>Fehler beim Laden der Welt"));
+                    return;
+                }
+                p.teleport(coords != null ? new Location(loaded, coords[0], coords[1], coords[2])
+                        : loaded.getSpawnLocation());
             });
         }
     }
@@ -174,13 +202,19 @@ public class InventoryClick implements Listener {
         ItemStack gray = pane(Material.GRAY_STAINED_GLASS_PANE);
         ItemStack cyan = pane(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
         ItemStack lime = pane(Material.LIME_STAINED_GLASS_PANE);
-        for (int i : new int[]{0, 1, 2, 9, 11, 18, 19, 20}) inv.setItem(i, gray);
+        for (int i : new int[]{0, 1, 2, 9, 11, 18, 19, 20}) {
+            inv.setItem(i, gray);
+        }
         ItemStack voidItem = named(new ItemStack(Material.WHITE_STAINED_GLASS), "Void");
         inv.setItem(10, voidItem);
-        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) inv.setItem(i, cyan);
+        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) {
+            inv.setItem(i, cyan);
+        }
         ItemStack flatItem = named(new ItemStack(Material.GRASS_BLOCK), "Flat");
         inv.setItem(13, flatItem);
-        for (int i : new int[]{6, 7, 8, 15, 17, 24, 25, 26}) inv.setItem(i, lime);
+        for (int i : new int[]{6, 7, 8, 15, 17, 24, 25, 26}) {
+            inv.setItem(i, lime);
+        }
         ItemStack normalItem = named(new ItemStack(Material.OAK_SAPLING), "Normal");
         inv.setItem(16, normalItem);
         p.openInventory(inv);
@@ -188,12 +222,17 @@ public class InventoryClick implements Listener {
 
     private void openSpawnpointsInventory(Player p, String worldName) {
         Inventory inv = Bukkit.createInventory(new InvHolder("spawns:" + worldName), 9);
-        for (String spawn : plugin.getBauserverConfig().getWorldsConfig().getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false)) {
+        for (String spawn : plugin.getBauserverConfig()
+                .getWorldsConfig()
+                .getConfigurationSection("Worlds." + worldName + ".Spawns")
+                .getKeys(false)) {
             ItemStack is = new ItemStack(Material.ENDER_EYE);
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(spawn);
             List<String> lore = new ArrayList<>();
-            String locStr = plugin.getBauserverConfig().getWorldsConfig().getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
+            String locStr = plugin.getBauserverConfig()
+                    .getWorldsConfig()
+                    .getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
             String[] arg = locStr.split(",");
             lore.add("Location: " + Math.round(Double.parseDouble(arg[1].trim()))
                     + ", " + Math.round(Double.parseDouble(arg[2].trim()))
@@ -211,8 +250,12 @@ public class InventoryClick implements Listener {
         Inventory inv = Bukkit.createInventory(new InvHolder("delete_world:" + worldName), 27);
         ItemStack gray = pane(Material.GRAY_STAINED_GLASS_PANE);
         ItemStack red = pane(Material.RED_STAINED_GLASS_PANE);
-        for (int i = 0; i < 27; i++) inv.setItem(i, gray);
-        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) inv.setItem(i, red);
+        for (int i = 0; i < 27; i++) {
+            inv.setItem(i, gray);
+        }
+        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) {
+            inv.setItem(i, red);
+        }
         ItemStack barrier = new ItemStack(Material.BARRIER);
         ItemMeta bm = barrier.getItemMeta();
         bm.setDisplayName("Welt löschen");
@@ -226,8 +269,12 @@ public class InventoryClick implements Listener {
         Inventory inv = Bukkit.createInventory(new InvHolder("delete_spawn:" + worldName + ":" + spawnName), 27);
         ItemStack gray = pane(Material.GRAY_STAINED_GLASS_PANE);
         ItemStack red = pane(Material.RED_STAINED_GLASS_PANE);
-        for (int i = 0; i < 27; i++) inv.setItem(i, gray);
-        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) inv.setItem(i, red);
+        for (int i = 0; i < 27; i++) {
+            inv.setItem(i, gray);
+        }
+        for (int i : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) {
+            inv.setItem(i, red);
+        }
         ItemStack barrier = new ItemStack(Material.BARRIER);
         ItemMeta bm = barrier.getItemMeta();
         bm.setDisplayName("Spawnpunkt löschen");
@@ -239,10 +286,12 @@ public class InventoryClick implements Listener {
 
     private void deleteWorld(Player p, String worldName) {
         if (plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World") == null) {
-            p.sendMessage(Vars.prefixed("<red>Kein globaler Spawn gesetzt, Welten können nicht gelöscht werden")); return;
+            p.sendMessage(Vars.prefixed("<red>Kein globaler Spawn gesetzt, Welten können nicht gelöscht werden"));
+            return;
         }
         if (plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World").equals("worlds/" + worldName)) {
-            p.sendMessage(Vars.prefixed("<red>Diese Welt kann nicht gelöscht werden (globaler Spawn)")); return;
+            p.sendMessage(Vars.prefixed("<red>Diese Welt kann nicht gelöscht werden (globaler Spawn)"));
+            return;
         }
         p.closeInventory();
         World spawnWorld = Bukkit.getWorld(plugin.getBauserverConfig().getWorldsConfig().getString("Spawn.World"));
@@ -252,21 +301,29 @@ public class InventoryClick implements Listener {
         Location spawnLoc = spawnWorld != null ? new Location(spawnWorld, sx, sy, sz) : null;
         for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.getWorld().getName().equals("worlds/" + worldName)) {
-                if (spawnLoc != null) all.teleport(spawnLoc);
+                if (spawnLoc != null)
+                    all.teleport(spawnLoc);
                 all.sendMessage(Vars.prefixed("<gold>Die Welt wurde gelöscht"));
             }
         }
         p.sendMessage(Vars.prefixed("<gold>Welt wird gelöscht..."));
         plugin.getBauserverConfig().getWorldsConfig().set("Worlds." + worldName, null);
         plugin.getBauserverConfig().saveConfiguration();
-        if (Bukkit.getWorld("worlds/" + worldName) != null) Bukkit.unloadWorld("worlds/" + worldName, false);
+        if (Bukkit.getWorld("worlds/" + worldName) != null)
+            Bukkit.unloadWorld("worlds/" + worldName, false);
         File worldDir = new File("worlds/" + worldName);
         if (worldDir.exists()) {
             try (Stream<Path> paths = Files.walk(worldDir.toPath())) {
                 paths.sorted(Comparator.reverseOrder()).forEach(path -> {
-                    try { Files.delete(path); } catch (IOException ex) { ex.printStackTrace(); }
+                    try {
+                        Files.delete(path);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 });
-            } catch (IOException ex) { ex.printStackTrace(); }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         p.sendMessage(Vars.prefixed("<green>Welt erfolgreich gelöscht"));
     }

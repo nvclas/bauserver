@@ -1,15 +1,13 @@
 package de.theniclas.bauplugin.events;
 
 import de.theniclas.bauplugin.Bauserver;
+import de.theniclas.bauplugin.utils.Vars;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-
-import de.theniclas.bauplugin.utils.BauserverConfig;
-import de.theniclas.bauplugin.utils.Vars;
 
 @RequiredArgsConstructor
 public class PlayerChangedWorld implements Listener {

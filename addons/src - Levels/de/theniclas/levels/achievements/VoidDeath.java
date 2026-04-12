@@ -10,13 +10,13 @@ import de.theniclas.levels.utils.Methods;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class VoidDeath implements Listener {
-	@EventHandler
-	public void onVoidDeath(PlayerDeathEvent e) {
-		Player p = e.getEntity();
-		if(Methods.isUnlocked(p)) {
-			if(p.getLastDamageCause().getCause() == DamageCause.VOID) {
-				Methods.addAchievement(p, "Wofür kannst du fliegen?", 50);
-			}
-		}
-	}
+    @EventHandler
+    public void onVoidDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity();
+        if (Methods.isUnlocked(p)) {
+            if (p.getLastDamageCause().getCause() == DamageCause.VOID) {
+                Methods.addAchievement(p, "Wofï¿½r kannst du fliegen?", 50);
+            }
+        }
+    }
 }

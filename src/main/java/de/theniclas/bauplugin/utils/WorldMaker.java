@@ -17,7 +17,8 @@ public class WorldMaker {
     private final Bauserver plugin;
 
     public void createNormalWorld(String name, Player p, ItemStack icon) {
-        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility")
+                || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.normalWorldName.remove(p);
             p.sendMessage(Vars.prefixed("<yellow>Erstelle normale Welt..."));
             new WorldCreator("worlds/" + name).type(WorldType.NORMAL).createWorld();
@@ -25,14 +26,16 @@ public class WorldMaker {
             Bukkit.getWorld("worlds/" + name).setSpawnLocation(0,
                     Bukkit.getWorld("worlds/" + name).getHighestBlockYAt(0, 0), 0);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.prefixed("<green>Deine normale Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
+            p.sendMessage(Vars.prefixed(
+                    "<green>Deine normale Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
         } else {
             sendWorldLimitMessage(p);
         }
     }
 
     public void createFlatWorld(String name, Player p, ItemStack icon) {
-        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility")
+                || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.flatWorldName.remove(p);
             p.sendMessage(Vars.prefixed("<yellow>Erstelle Flat-Welt..."));
             new WorldCreator("worlds/" + name).type(WorldType.FLAT).createWorld();
@@ -40,19 +43,22 @@ public class WorldMaker {
             Bukkit.getWorld("worlds/" + name).setSpawnLocation(0,
                     Bukkit.getWorld("worlds/" + name).getHighestBlockYAt(0, 0), 0);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.prefixed("<green>Deine Flat-Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
+            p.sendMessage(
+                    Vars.prefixed("<green>Deine Flat-Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
         } else {
             sendWorldLimitMessage(p);
         }
     }
 
     public void createVoidWorld(String name, Player p, ItemStack icon) {
-        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility") || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
+        if (plugin.getBauserverConfig().getWorldsConfig().getBoolean("Visibility")
+                || Vars.getWorldAmount(p) < Vars.getMaxWorldAmount(p)) {
             Vars.voidWorldName.remove(p);
             p.sendMessage(Vars.prefixed("<yellow>Erstelle Void-Welt..."));
             new WorldCreator("worlds/" + name)
                     .type(WorldType.FLAT)
-                    .generator(new ChunkGenerator() {})
+                    .generator(new ChunkGenerator() {
+                    })
                     .createWorld();
             saveWorldMeta(name, p, icon, "Void");
             Bukkit.getWorld("worlds/" + name).setSpawnLocation(0, 100, 0);
@@ -60,7 +66,8 @@ public class WorldMaker {
                     .getBlockAt(new Location(Bukkit.getWorld("worlds/" + name), 0, 99, 0))
                     .setType(Material.BEDROCK);
             p.teleport(Bukkit.getWorld("worlds/" + name).getSpawnLocation());
-            p.sendMessage(Vars.prefixed("<green>Deine Void-Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
+            p.sendMessage(
+                    Vars.prefixed("<green>Deine Void-Welt wurde mit dem Namen <yellow>" + name + " <green>erstellt"));
         } else {
             sendWorldLimitMessage(p);
         }

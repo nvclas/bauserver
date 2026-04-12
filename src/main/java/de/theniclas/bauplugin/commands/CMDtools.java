@@ -1,5 +1,7 @@
 package de.theniclas.bauplugin.commands;
 
+import de.theniclas.bauplugin.utils.InvHolder;
+import de.theniclas.bauplugin.utils.Vars;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -9,15 +11,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import de.theniclas.bauplugin.utils.InvHolder;
-import de.theniclas.bauplugin.utils.Vars;
-
 public class CMDtools implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player p)) return false;
-        if (!p.hasPermission("bs.tools")) { p.sendMessage(Vars.NOPERM); return false; }
+        if (!(sender instanceof Player p))
+            return false;
+        if (!p.hasPermission("bs.tools")) {
+            p.sendMessage(Vars.NOPERM);
+            return false;
+        }
         Inventory inv = Bukkit.createInventory(new InvHolder("tools"), 9,
                 Vars.mini("<gold><bold>Tools"));
         inv.addItem(new ItemStack(Material.WOODEN_AXE));

@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class PlayerQuit implements Listener {
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		Player p = e.getPlayer();
-		if(Vars.placedBlocks.containsKey(p)) {
-			Vars.placedBlocks.remove(p, Vars.placedBlocks.get(p));
-		}
-	}
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        if (Vars.placedBlocks.containsKey(p)) {
+            Vars.placedBlocks.remove(p, Vars.placedBlocks.get(p));
+        }
+    }
 }

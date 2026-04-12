@@ -8,13 +8,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import de.theniclas.levels.utils.Methods;
 
 public class FirstBlock implements Listener {
-	@EventHandler
-	public void onFirstBlock(BlockPlaceEvent e)  {
-		Player p = e.getPlayer();
-		if(!e.isCancelled()) {
-			if(Methods.isUnlocked(p)) {
-				Methods.addAchievement(p, "Du weißt wie es geht!", 10);
-			}				
-		}
-	}
+    @EventHandler
+    public void onFirstBlock(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+        if (!e.isCancelled()) {
+            if (Methods.isUnlocked(p)) {
+                Methods.addAchievement(p, "Du weiï¿½t wie es geht!", 10);
+            }
+        }
+    }
 }

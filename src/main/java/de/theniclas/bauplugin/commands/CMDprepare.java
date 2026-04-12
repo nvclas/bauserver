@@ -1,22 +1,25 @@
 package de.theniclas.bauplugin.commands;
 
-import org.bukkit.GameRule;
+import de.theniclas.bauplugin.utils.Vars;
 import org.bukkit.GameRules;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.Vars;
-
 public class CMDprepare implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player p)) return false;
-        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NOPERM); return false; }
+        if (!(sender instanceof Player p))
+            return false;
+        if (!p.hasPermission("bs.worlds")) {
+            p.sendMessage(Vars.NOPERM);
+            return false;
+        }
         if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-            p.sendMessage(Vars.prefixed("<red>Du bist nicht der Ersteller dieser Welt")); return false;
+            p.sendMessage(Vars.prefixed("<red>Du bist nicht der Ersteller dieser Welt"));
+            return false;
         }
         p.getWorld().setTime(6000);
         p.getWorld().setGameRule(GameRules.SPAWN_MOBS, false);
