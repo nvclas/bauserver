@@ -8,18 +8,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class EntityDamageByEntity implements Listener {
-	@EventHandler
-	public void onEntityDamage(EntityDamageByEntityEvent e) {
-		
-		if(e.getDamager() instanceof Player) {
-			Player p = (Player) e.getDamager();
-			if(!p.hasPermission("bs.admin")) {
-				if(!Vars.isTrusted(p, p.getWorld().getName())) {
-					if(!Vars.isOwner(p, p.getWorld().getName())) {
-						e.setCancelled(true);
-					}
-				}
-			}
-		}
-	}
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageByEntityEvent e) {
+        if (!(e.getDamager() instanceof Player p)) return;
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+        }
+    }
 }

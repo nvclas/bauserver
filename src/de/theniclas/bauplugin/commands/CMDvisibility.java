@@ -10,26 +10,20 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDvisibility implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("visibility")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.admin")) {
-					if(Configs.worldsConfig.getBoolean("Visibility") == true) {
-						Configs.worldsConfig.set("Visibility", false);
-						p.sendMessage(Vars.pr + "§aWelten sind nun nicht mehr für alle sichtbar");
-					} else {
-						Configs.worldsConfig.set("Visibility", true);
-						p.sendMessage(Vars.pr + "§aWelten sind nun für alle sichtbar");
-					}
-					Configs.saveConfiguration();
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.admin")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        boolean current = Configs.worldsConfig.getBoolean("Visibility");
+        Configs.worldsConfig.set("Visibility", !current);
+        Configs.saveConfiguration();
+
+        if (!current) {
+            p.sendMessage(Vars.PREFIX + "Â§aWelten sind nun fÃ¼r alle sichtbar");
+        } else {
+            p.sendMessage(Vars.PREFIX + "Â§aWelten sind nun nicht mehr fÃ¼r alle sichtbar");
+        }
+        return false;
+    }
 }

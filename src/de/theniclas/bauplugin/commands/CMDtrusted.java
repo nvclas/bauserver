@@ -1,5 +1,6 @@
 package de.theniclas.bauplugin.commands;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -13,24 +14,28 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDtrusted implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("trusted")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.worlds")) {
-					if(Vars.isOwner(p, p.getWorld().getName()) || p.hasPermission("bs.admin")) {
-						if(!Configs.worldsConfig.getStringList("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Trusted").isEmpty() && Configs.worldsConfig.getStringList("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Trusted") != null) {
-							p.sendMessage(Vars.pr + "§aFolgende Spieler haben in deiner Welt Baurechte:");
-							for(String uuid : Configs.worldsConfig.getStringList("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Trusted")) {
-								p.sendMessage("§7 - §e" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
-							}
-						} else p.sendMessage(Vars.pr + "§cAußer dir hat in dieser Welt niemand Baurechte");
-					} else p.sendMessage(Vars.pr + "§cDas geht nur in deiner eigenen Welt");
-				} else p.sendMessage(Vars.noperm);
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
+            p.sendMessage(Vars.PREFIX + "Â§cDas geht nur in deiner eigenen Welt");
+            return false;
+        }
+
+        String worldKey = Vars.stripWorldsPrefix(p.getWorld().getName());
+        List<String> trustedUuids = Configs.worldsConfig.getStringList("Worlds." + worldKey + ".Trusted");
+
+        if (trustedUuids.isEmpty()) {
+            p.sendMessage(Vars.PREFIX + "Â§cAuÃŸer dir hat in dieser Welt niemand Baurechte");
+            return false;
+        }
+
+        p.sendMessage(Vars.PREFIX + "Â§aFolgende Spieler haben in deiner Welt Baurechte:");
+        for (String uuid : trustedUuids) {
+            p.sendMessage("Â§7 - Â§e" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
+        }
+        return false;
+    }
 }

@@ -1,62 +1,74 @@
 package de.theniclas.bauplugin.commands;
 
-
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import de.theniclas.bauplugin.main.Main;
 import de.theniclas.bauplugin.utils.Vars;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class CMDtpa implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("tpa")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(args.length >= 1) {
-					Player target = Bukkit.getPlayer(args[0]);
-					if(target != null) {
-						if(!target.getName().equals(p.getName())) {
-							if(!Vars.tpa.containsKey(target.getUniqueId().toString()) || !Vars.tpa.get(target.getUniqueId().toString()).equals(p.getUniqueId().toString())) {
-								Vars.tpa.put(target.getUniqueId().toString(), p.getUniqueId().toString());
-								p.sendMessage(Vars.pr + "§6Du hast §e" + target.getName() + " §6eine Anfrage gesendet");
-								target.sendMessage(Vars.pr + "§e" + p.getName() + " §6möchte sich zu dir teleportieren");
-								target.sendMessage(Vars.pr + "§6Die Anfrage ist §e30 Sekunden §6lang gültig");
-								IChatBaseComponent comp = ChatSerializer.a("[{\"text\":\"" + Vars.pr +"§7Klicke hier zum Annehmen§8: \"},{\"text\":\"§a[ANNEHMEN]\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tpaccept " + p.getName() + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"§aKlicken zum Annehmen\"}}]");
-								PacketPlayOutChat chat = new PacketPlayOutChat(comp);
-								((CraftPlayer)target).getHandle().playerConnection.sendPacket(chat);
-								Bukkit.getScheduler().runTaskLater(Main.getPlugin(), new Runnable() {
-									public void run() {
-										if(Vars.tpa.containsKey(target.getUniqueId().toString()) && Vars.tpa.get(target.getUniqueId().toString()).equals(p.getUniqueId().toString())) {
-											Vars.tpa.remove(target.getUniqueId().toString(), p.getUniqueId().toString());
-											target.sendMessage(Vars.pr + "§cDie Anfrage von §e" + p.getName() + " §cist abgelaufen");
-											p.sendMessage(Vars.pr + "§cDeine Anfrage an §e" + target.getName() + " §cist abgelaufen");
-										}
-									}
-								}, 20*30);
-							} else {
-								p.sendMessage(Vars.pr + "§cDu hast §e" + target.getName() + " §cbereits eine Anfrage gesendet");
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cDu bist doch schon bei dir");
-						}
-					} else {
-						p.sendMessage(Vars.pr + "§e" + args[0] + " §cist nicht online");
-					}
-				} else {
-					p.sendMessage(Vars.pr + "§cWem willst du eine Anfrage schicken?");
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+
+        if (args.length < 1) {
+            p.sendMessage(Vars.PREFIX + "Â§cWem willst du eine Anfrage schicken?");
+            return false;
+        }
+
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            p.sendMessage(Vars.PREFIX + "Â§e" + args[0] + " Â§cist nicht online");
+            return false;
+        }
+
+        if (target.equals(p)) {
+            p.sendMessage(Vars.PREFIX + "Â§cDu bist doch schon bei dir");
+            return false;
+        }
+
+        String targetId = target.getUniqueId().toString();
+        String senderId  = p.getUniqueId().toString();
+
+        if (senderId.equals(Vars.tpa.get(targetId))) {
+            p.sendMessage(Vars.PREFIX + "Â§cDu hast Â§e" + target.getName() + " Â§cbereits eine Anfrage gesendet");
+            return false;
+        }
+
+        Vars.tpa.put(targetId, senderId);
+        p.sendMessage(Vars.PREFIX + "Â§6Du hast Â§e" + target.getName() + " Â§6eine Anfrage gesendet");
+        target.sendMessage(Vars.PREFIX + "Â§e" + p.getName() + " Â§6mÃ¶chte sich zu dir teleportieren");
+        target.sendMessage(Vars.PREFIX + "Â§6Die Anfrage ist Â§e30 Sekunden Â§6lang gÃ¼ltig");
+
+        // Clickable accept-message using the Adventure API (Paper / modern Spigot).
+        // The prefix contains legacy section-sign codes and is deserialized accordingly.
+        Component acceptMsg = LegacyComponentSerializer.legacySection()
+                .deserialize(Vars.PREFIX + "Â§7Klicke hier zum AnnehmenÂ§8: ")
+                .append(Component.text("[ANNEHMEN]")
+                        .color(NamedTextColor.GREEN)
+                        .clickEvent(ClickEvent.runCommand("/tpaccept " + p.getName()))
+                        .hoverEvent(HoverEvent.showText(
+                                Component.text("Klicken zum Annehmen").color(NamedTextColor.GREEN))));
+        target.sendMessage(acceptMsg);
+
+        // Expire the request after 30 seconds
+        Bukkit.getScheduler().runTaskLater(Main.getPlugin(), () -> {
+            if (senderId.equals(Vars.tpa.get(targetId))) {
+                Vars.tpa.remove(targetId);
+                if (target.isOnline()) target.sendMessage(Vars.PREFIX + "Â§cDie Anfrage von Â§e" + p.getName() + " Â§cist abgelaufen");
+                if (p.isOnline())      p.sendMessage(Vars.PREFIX + "Â§cDeine Anfrage an Â§e" + target.getName() + " Â§cist abgelaufen");
+            }
+        }, 20L * 30);
+
+        return false;
+    }
 }

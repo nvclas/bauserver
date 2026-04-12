@@ -11,80 +11,64 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDgm implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("gm")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.worlds")) {
-					if(args.length == 1) {
-						switch(args[0]) {
-						case "0":
-							p.setGameMode(GameMode.SURVIVAL);
-							p.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eSurvival");
-							break;
-						case "1":
-							p.setGameMode(GameMode.CREATIVE);
-							p.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eCreative");
-							break;
-						case "2":
-							p.setGameMode(GameMode.ADVENTURE);
-							p.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eAdventure");
-							break;
-						case "3":
-							p.setGameMode(GameMode.SPECTATOR);
-							p.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eSpectator");
-							break;
-						default:
-							p.sendMessage(Vars.pr + "§cAber diesen Spielmodus gibt's gar nicht");
-						}
-					} else if(args.length >= 2) {
-						Player target = Bukkit.getPlayer(args[1]);
-						if(target != null) {
-							if((Vars.isOwner(p, p.getWorld().getName()) && target.getWorld() == p.getWorld()) || p.hasPermission("bs.admin")) {
-								switch(args[0]) {
-								case "0":
-									p.sendMessage(Vars.pr + "§e" + target.getName() + " §aist nun im Spielmodus §eSurvival");
-									target.setGameMode(GameMode.SURVIVAL);
-									target.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eSurvival");
-									break;
-								case "1":
-									p.sendMessage(Vars.pr + "§e" + target.getName() + " §aist nun im Spielmodus §eCreative");
-									target.setGameMode(GameMode.CREATIVE);
-									target.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eCreative");
-									break;
-								case "2":
-									p.sendMessage(Vars.pr + "§e" + target.getName() + " §aist nun im Spielmodus §eAdventure");
-									target.setGameMode(GameMode.ADVENTURE);
-									target.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eAdventure");
-									break;
-								case "3":
-									p.sendMessage(Vars.pr + "§e" + target.getName() + " §aist nun im Spielmodus §eSpectator");
-									target.setGameMode(GameMode.SPECTATOR);
-									target.sendMessage(Vars.pr + "§aDu bist nun im Spielmodus §eSpectator");
-									break;
-								default:
-									p.sendMessage(Vars.pr + "§cAber diesen Spielmodus gibt's gar nicht");
-								}
-							} else {
-								if(!Vars.isOwner(p, p.getWorld().getName())) { 
-									p.sendMessage(Vars.pr + "§cDu musst der Besitzer dieser Welt sein");
-								} else if(target.getWorld() != p.getWorld()) {
-									p.sendMessage(Vars.pr + "§cDas Ziel muss sich in deiner Welt befinden");
-								}
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cDieser Spieler ist nicht online");
-						}
-					} else {
-						p.sendMessage(Vars.pr + "§cUps, fehlt da etwa eine Zahl?");
-					}
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		} 
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        if (args.length == 0) {
+            p.sendMessage(Vars.PREFIX + "Â§cUps, fehlt da etwa eine Zahl?");
+            return false;
+        }
+
+        GameMode mode = parseMode(args[0]);
+        if (mode == null) {
+            p.sendMessage(Vars.PREFIX + "Â§cAber diesen Spielmodus gibt's gar nicht");
+            return false;
+        }
+
+        if (args.length >= 2) {
+            // Change another player's game mode
+            Player target = Bukkit.getPlayer(args[1]);
+            if (target == null) { p.sendMessage(Vars.PREFIX + "Â§cDieser Spieler ist nicht online"); return false; }
+
+            boolean sameWorld = target.getWorld() == p.getWorld();
+            if (!p.hasPermission("bs.admin")) {
+                if (!Vars.isOwner(p, p.getWorld().getName())) {
+                    p.sendMessage(Vars.PREFIX + "Â§cDu musst der Besitzer dieser Welt sein");
+                    return false;
+                }
+                if (!sameWorld) {
+                    p.sendMessage(Vars.PREFIX + "Â§cDas Ziel muss sich in deiner Welt befinden");
+                    return false;
+                }
+            }
+            target.setGameMode(mode);
+            target.sendMessage(Vars.PREFIX + "Â§aDu bist nun im Spielmodus Â§e" + modeName(mode));
+            p.sendMessage(Vars.PREFIX + "Â§e" + target.getName() + " Â§aist nun im Spielmodus Â§e" + modeName(mode));
+        } else {
+            p.setGameMode(mode);
+            p.sendMessage(Vars.PREFIX + "Â§aDu bist nun im Spielmodus Â§e" + modeName(mode));
+        }
+        return false;
+    }
+
+    private GameMode parseMode(String arg) {
+        return switch (arg) {
+            case "0" -> GameMode.SURVIVAL;
+            case "1" -> GameMode.CREATIVE;
+            case "2" -> GameMode.ADVENTURE;
+            case "3" -> GameMode.SPECTATOR;
+            default  -> null;
+        };
+    }
+
+    private String modeName(GameMode mode) {
+        return switch (mode) {
+            case SURVIVAL  -> "Survival";
+            case CREATIVE  -> "Creative";
+            case ADVENTURE -> "Adventure";
+            case SPECTATOR -> "Spectator";
+        };
+    }
 }

@@ -13,23 +13,22 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDspawn implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("spawn")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(Configs.worldsConfig.getConfigurationSection("Spawn") != null) {
-					World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
-					double x = Configs.worldsConfig.getDouble("Spawn.X");
-					double y = Configs.worldsConfig.getDouble("Spawn.Y");
-					double z = Configs.worldsConfig.getDouble("Spawn.Z");
-					Location spawn = new Location(w, x, y, z);
-					p.teleport(spawn);
-				} else {
-					p.sendMessage(Vars.pr + "�cEs wurde kein Spawnpunkt gesetzt");
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+
+        if (Configs.worldsConfig.getConfigurationSection("Spawn") == null) {
+            p.sendMessage(Vars.PREFIX + "§cEs wurde kein Spawnpunkt gesetzt");
+            return false;
+        }
+
+        World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
+        if (w == null) { p.sendMessage(Vars.PREFIX + "§cSpawnwelt konnte nicht geladen werden"); return false; }
+
+        double x = Configs.worldsConfig.getDouble("Spawn.X");
+        double y = Configs.worldsConfig.getDouble("Spawn.Y");
+        double z = Configs.worldsConfig.getDouble("Spawn.Z");
+        p.teleport(new Location(w, x, y, z));
+        return false;
+    }
 }

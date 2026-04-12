@@ -5,7 +5,11 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,118 +17,138 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Door;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Openable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.theniclas.bauplugin.utils.Vars;
 
 public class PlayerInteract implements Listener {
 
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onInteract(PlayerInteractEvent e) {
-		
-		Player p = e.getPlayer();
-		if(!p.hasPermission("bs.admin")) {
-			if(!Vars.isTrusted(p, p.getWorld().getName())) {
-				if(!Vars.isOwner(p, p.getWorld().getName())) {
-					e.setCancelled(true);
-					return;
-				}
-			}
-		}
-		if(p.getItemInHand() != null && p.getItemInHand().getType() != null && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().getDisplayName() != null) {
-			if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fRoter Pilzblock")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.HUGE_MUSHROOM_2);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_WOOD, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fBrauner Pilzblock")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.HUGE_MUSHROOM_1);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_WOOD, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fPilzsporenblock")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.HUGE_MUSHROOM_1);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setData((byte) 0);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_WOOD, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fPilzstielblock")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.HUGE_MUSHROOM_1);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setData((byte) 15);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_WOOD, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fVolle Steinstufe")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.DOUBLE_STEP);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setData((byte) 8);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_STONE, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fVolle Sandsteinstufe")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.DOUBLE_STEP);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setData((byte) 9);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_STONE, 1f, 0.8f);
-					}
-					
-				} else if(p.getItemInHand().getItemMeta().getDisplayName().equals("§fVolle Rote Sandsteinstufe")) {
-					e.setCancelled(true);
-					Block targetBlock = e.getClickedBlock().getRelative(e.getBlockFace());
-					Location bloc = new Location(targetBlock.getWorld(), targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5);
-					if(targetBlock.getWorld().getNearbyEntities(bloc, 0.5, 1, 0.5).stream().noneMatch(entity -> !(entity instanceof Item))) {
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.DOUBLE_STONE_SLAB2);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setData((byte) 8);
-						p.playSound(e.getClickedBlock().getLocation(), Sound.DIG_STONE, 1f, 0.8f);
-					}
-				}
-			}
-		}
-		if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(e.getClickedBlock().getType() == Material.IRON_TRAPDOOR || e.getClickedBlock().getType() == Material.IRON_DOOR_BLOCK) {
-				BlockState blockState = e.getClickedBlock().getState();
-				if(e.getClickedBlock().getType() == Material.IRON_DOOR_BLOCK) {
-					if(((Door) blockState.getData()).isTopHalf()){
-					    blockState = e.getClickedBlock().getRelative(BlockFace.DOWN).getState();
-					}
-				}
-				Openable openable = (Openable) blockState.getData();
-				if(openable.isOpen()) {
-					openable.setOpen(false);
-					p.playSound(e.getClickedBlock().getLocation(), Sound.DOOR_CLOSE, 1f, 1f);
-				} else {
-					openable.setOpen(true);
-					p.playSound(e.getClickedBlock().getLocation(), Sound.DOOR_OPEN, 1f, 1f);
-				}
-				blockState.setData((MaterialData) openable);	
-				blockState.update();
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+
+        // Guard: only owners, trusted players and admins may interact
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+            return;
+        }
+
+        // Special block placement via held item
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock() != null) {
+            ItemStack held = p.getInventory().getItemInHand();
+            if (held != null && held.hasItemMeta()) {
+                ItemMeta meta = held.getItemMeta();
+                if (meta.hasDisplayName()) {
+                    handleSpecialBlock(e, p, meta.getDisplayName());
+                    if (e.isCancelled()) return;
+                }
+            }
+
+            // Iron door / iron trapdoor toggling (left open by default in vanilla)
+            handleIronDoorToggle(e, p);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Special-block placement
+    // -------------------------------------------------------------------------
+
+    private void handleSpecialBlock(PlayerInteractEvent e, Player p, String name) {
+        switch (name) {
+            case "Â§fRoter Pilzblock"     -> placeBlock(e, p, Material.RED_MUSHROOM_BLOCK,   Sound.BLOCK_WOOD_BREAK);
+            case "Â§fBrauner Pilzblock"   -> placeBlock(e, p, Material.BROWN_MUSHROOM_BLOCK, Sound.BLOCK_WOOD_BREAK);
+            case "Â§fPilzsporenblock"     -> placePoreBlock(e, p);
+            case "Â§fPilzstielblock"      -> placeBlock(e, p, Material.MUSHROOM_STEM,         Sound.BLOCK_WOOD_BREAK);
+            case "Â§fVolle Steinstufe"    -> placeDoubleSlab(e, p, Material.SMOOTH_STONE_SLAB);
+            case "Â§fVolle Sandsteinstufe"    -> placeDoubleSlab(e, p, Material.SANDSTONE_SLAB);
+            case "Â§fVolle Rote Sandsteinstufe" -> placeDoubleSlab(e, p, Material.RED_SANDSTONE_SLAB);
+            default -> { /* not a special block */ }
+        }
+    }
+
+    private void placeBlock(PlayerInteractEvent e, Player p, Material mat, Sound sound) {
+        e.setCancelled(true);
+        Block target = e.getClickedBlock().getRelative(e.getBlockFace());
+        if (isOccupied(target)) return;
+        target.setType(mat);
+        p.playSound(target.getLocation(), sound, 1f, 0.8f);
+    }
+
+    /** Places a Â§fPilzsporenblockÂ§r: a brown mushroom block where all six faces show pores. */
+    private void placePoreBlock(PlayerInteractEvent e, Player p) {
+        e.setCancelled(true);
+        Block target = e.getClickedBlock().getRelative(e.getBlockFace());
+        if (isOccupied(target)) return;
+        target.setType(Material.BROWN_MUSHROOM_BLOCK);
+        org.bukkit.block.data.type.MultipleFacing pore =
+                (org.bukkit.block.data.type.MultipleFacing) target.getBlockData();
+        for (BlockFace face : pore.getAllowedFaces()) pore.setFace(face, false);
+        target.setBlockData(pore);
+        p.playSound(target.getLocation(), Sound.BLOCK_WOOD_BREAK, 1f, 0.8f);
+    }
+
+    /** Places a double-slab block of the given slab material. */
+    private void placeDoubleSlab(PlayerInteractEvent e, Player p, Material slabMat) {
+        e.setCancelled(true);
+        Block target = e.getClickedBlock().getRelative(e.getBlockFace());
+        if (isOccupied(target)) return;
+        target.setType(slabMat);
+        Slab slab = (Slab) target.getBlockData();
+        slab.setType(Slab.Type.DOUBLE);
+        target.setBlockData(slab);
+        p.playSound(target.getLocation(), Sound.BLOCK_STONE_BREAK, 1f, 0.8f);
+    }
+
+    /** Returns {@code true} when the block position is already occupied by a non-item entity. */
+    private boolean isOccupied(Block block) {
+        Location centre = block.getLocation().add(0.5, 0, 0.5);
+        return !block.getWorld().getNearbyEntities(centre, 0.5, 1, 0.5)
+                     .stream().allMatch(en -> en instanceof Item);
+    }
+
+    // -------------------------------------------------------------------------
+    // Iron door / trapdoor toggle
+    // -------------------------------------------------------------------------
+
+    private void handleIronDoorToggle(PlayerInteractEvent e, Player p) {
+        Block clicked = e.getClickedBlock();
+        if (clicked == null) return;
+        Material type = clicked.getType();
+
+        if (type == Material.IRON_TRAPDOOR) {
+            e.setCancelled(true);
+            TrapDoor td = (TrapDoor) clicked.getBlockData();
+            td.setOpen(!td.isOpen());
+            clicked.setBlockData(td);
+            Sound sound = td.isOpen() ? Sound.BLOCK_IRON_TRAPDOOR_OPEN : Sound.BLOCK_IRON_TRAPDOOR_CLOSE;
+            p.playSound(clicked.getLocation(), sound, 1f, 1f);
+
+        } else if (type == Material.IRON_DOOR) {
+            e.setCancelled(true);
+            // Normalise to the lower half
+            Block lower = clicked;
+            BlockData data = clicked.getBlockData();
+            if (data instanceof Bisected bisected && bisected.getHalf() == Bisected.Half.TOP) {
+                lower = clicked.getRelative(BlockFace.DOWN);
+            }
+
+            Openable door = (Openable) lower.getBlockData();
+            door.setOpen(!door.isOpen());
+            lower.setBlockData((BlockData) door);
+
+            // Sync the upper half
+            Block upper = lower.getRelative(BlockFace.UP);
+            if (upper.getType() == Material.IRON_DOOR) {
+                Openable upperDoor = (Openable) upper.getBlockData();
+                upperDoor.setOpen(door.isOpen());
+                upper.setBlockData((BlockData) upperDoor);
+            }
+
+            Sound sound = door.isOpen() ? Sound.BLOCK_IRON_DOOR_OPEN : Sound.BLOCK_IRON_DOOR_CLOSE;
+            p.playSound(lower.getLocation(), sound, 1f, 1f);
+        }
+    }
 }

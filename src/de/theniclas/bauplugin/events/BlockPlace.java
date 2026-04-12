@@ -8,16 +8,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class BlockPlace implements Listener {
-	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent e) {
-		
-		Player p = e.getPlayer();
-		if(!p.hasPermission("bs.admin")) {
-			if(!Vars.isTrusted(p, p.getWorld().getName())) {
-				if(!Vars.isOwner(p, p.getWorld().getName())) {
-					e.setCancelled(true);
-				}
-			}
-		}
-	}
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+        }
+    }
 }

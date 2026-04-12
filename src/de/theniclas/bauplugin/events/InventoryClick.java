@@ -2,11 +2,14 @@ package de.theniclas.bauplugin.events;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -27,291 +30,375 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class InventoryClick implements Listener {
 
-	@EventHandler
-	public void onInvClick(InventoryClickEvent e) {
-		
-		if(e.getWhoClicked() instanceof Player) {
-			Player p = (Player) e.getWhoClicked();			
-			if(e.getClickedInventory() != null && e.getCurrentItem().getType() != null && e.getCurrentItem() != null) {
-				if(!e.getCurrentItem().hasItemMeta()) {
-					if(e.getClickedInventory().getName().equals("§6§lTools")) {
-						e.setCancelled(true);
-						p.getInventory().addItem(e.getCurrentItem());		
-					}
-				} else {
-					if(e.getClickedInventory().getName().equals("§5§lSpezialblöcke")) {
-						e.setCancelled(true);
-						p.getInventory().addItem(e.getCurrentItem());	
-					} else if(e.getClickedInventory().getName().equals("§6§lTools")) {
-						e.setCancelled(true);
-						p.getInventory().addItem(e.getCurrentItem());
-						
-					} else if(e.getClickedInventory().getName().equals("§3Welten")) {
-						e.setCancelled(true);
-						if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§cWelt erstellen")) {
-							Inventory inv = Bukkit.createInventory(null, 3*9,"§3Welt erstellen");
-							inv.setItem(0, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(1, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(2, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(9, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(11, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(18, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(19, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							inv.setItem(20, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7));
-							ItemStack is1 = new ItemStack(Material.STAINED_GLASS, 1, (short) 0);
-							ItemMeta im1 = is1.getItemMeta();
-							im1.setDisplayName("§7Void");
-							is1.setItemMeta(im1);
-							inv.setItem(10, is1);
-							
-							
-							inv.setItem(3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(4, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(5, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(12, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(14, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(21, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(22, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							inv.setItem(23, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3));
-							ItemStack is2 = new ItemStack(Material.GRASS);
-							ItemMeta im2 = is2.getItemMeta();
-							im2.setDisplayName("§bFlat");
-							is2.setItemMeta(im2);
-							inv.setItem(13, is2);
-							
-										
-							inv.setItem(6, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(7, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(8, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(15, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(17, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(24, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(25, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							inv.setItem(26, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
-							ItemStack is3 = new ItemStack(Material.SAPLING);
-							ItemMeta im3 = is3.getItemMeta();
-							im3.setDisplayName("§aNormal");
-							is3.setItemMeta(im3);
-							inv.setItem(16, is3);
-							
-							for(int i = 0; i<27; i++) {
-								ItemStack item = inv.getItem(i);
-								if(item != null && item.getType() == Material.STAINED_GLASS_PANE) {
-									ItemMeta meta = item.getItemMeta();
-									meta.setDisplayName(" ");
-									item.setItemMeta(meta);
-								}
-							}
-							
-							p.openInventory(inv);
-		
-						} else if(Configs.worldsConfig.getConfigurationSection("Worlds").contains(e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")) && e.getAction() == InventoryAction.PICKUP_ALL) {
-								if(Configs.worldsConfig.get("Worlds." + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "") + ".Spawns") == null || Configs.worldsConfig.getConfigurationSection("Worlds." + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "") + ".Spawns").getKeys(false).isEmpty()) {
-									if(Bukkit.getWorld("worlds/" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")) != null) {
-										p.teleport(Bukkit.getWorld("worlds/" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")).getSpawnLocation());
-									} else {
-										p.closeInventory();
-										p.sendMessage(Vars.pr + "§6Welt wird geladen...");
-										Bukkit.getScheduler().runTask(Main.getPlugin(), new Runnable() {
-											public void run() {
-												new WorldCreator("worlds/" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")).createWorld();
-												p.teleport(Bukkit.getWorld("worlds/" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")).getSpawnLocation());
-											}
-										});
-									}
-								} else {
-									Inventory spawnpoints = Bukkit.createInventory(null, 9, "§6" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", ""));
-									for(String spawns : Configs.worldsConfig.getConfigurationSection("Worlds." + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "") + ".Spawns").getKeys(false)) {
-										ItemStack is = new ItemStack(Material.EYE_OF_ENDER);
-										ItemMeta im = is.getItemMeta();
-										im.setDisplayName("§5" + spawns);
-										List<String> data = new ArrayList<>();
-										String[] arg = Configs.worldsConfig.getString("Worlds." + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "") + ".Spawns." + spawns + ".Location").split(",");
-										data.add("§6Location§8: §e" + String.valueOf(Math.round(Double.parseDouble(arg[1]))) + ", " + String.valueOf(Math.round(Double.parseDouble(arg[2]))) + ", " + String.valueOf(Math.round(Double.parseDouble(arg[3]))));
-										if(Vars.isOwner(p, e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")) || p.hasPermission("bs.admin")) {
-											data.add("§cRechtsklick zum Löschen");
-										}
-										im.setLore(data);
-										is.setItemMeta(im);
-										spawnpoints.addItem(is);
-									}
-									p.openInventory(spawnpoints);		
-								}
-						} else if(Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")) && (e.getAction() == InventoryAction.PICKUP_HALF && Vars.isOwner(p, e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "")) || p.hasPermission("bs.admin"))) {
-							Inventory delete = Bukkit.createInventory(null, 9*3, "§c" + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§a", "") + " löschen");
-							for(int i = 0; i < 27; i++) {
-								ItemStack is = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
-								ItemMeta im = is.getItemMeta();
-								im.setDisplayName(" ");
-								is.setItemMeta(im);
-								delete.setItem(i, is);
-							}
-							ItemStack is1 = new ItemStack(Material.BARRIER);
-							ItemMeta im1 = is1.getItemMeta();
-							im1.setDisplayName("§4Welt löschen");
-							List<String> warning = new ArrayList<>();
-							warning.add("§cAchtung, dieser Vorgang kann nicht rückgängig gemacht werden");
-							im1.setLore(warning);
-							is1.setItemMeta(im1);
-							delete.setItem(13, is1);
-							
-							delete.setItem(3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(4, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(5, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(12, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(14, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(21, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(22, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(23, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							
-							for(int i = 0; i < 27; i++) {
-								if(!delete.getItem(i).hasItemMeta()) {
-									ItemMeta im = delete.getItem(i).getItemMeta();
-									im.setDisplayName(" ");
-									delete.getItem(i).setItemMeta(im);
-								}
-							}
-							
-							p.openInventory(delete);
-							
-						} else if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§bNächste Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
-							int page = InventoryCreator.currentPage.get(p);
-							InventoryCreator.currentPage.put(p, page + 1);
-							InventoryCreator.openWorldInventory(p);
-						} else if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§bVorherige Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
-							int page = InventoryCreator.currentPage.get(p);
-							InventoryCreator.currentPage.put(p, page - 1);
-							InventoryCreator.openWorldInventory(p);
-						}
-							
-					} else if(e.getClickedInventory().getName().equals("§3Welt erstellen")) {
-						e.setCancelled(true);
-						if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§7Void")) {
-							p.closeInventory();
-							p.sendMessage(Vars.pr + "§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen für deine Welt in den Chat ein");
-							Vars.voidWorldName.add(p);
-						} else if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§bFlat")) {
-							p.closeInventory();
-							p.sendMessage(Vars.pr + "§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen für deine Welt in den Chat ein");
-							Vars.flatWorldName.add(p);
-						} else if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§aNormal")) {
-							p.closeInventory();
-							p.sendMessage(Vars.pr + "§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen für deine Welt in den Chat ein");
-							Vars.normalWorldName.add(p);
-						}
-					} else if(Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(e.getInventory().getName().replaceAll("§6", ""))) {
-						e.setCancelled(true);
-						if(e.getAction() == InventoryAction.PICKUP_HALF && (Vars.isOwner(p, e.getInventory().getName().replaceAll("§6", "")) || p.hasPermission("bs.admin"))) {
-							Inventory delete = Bukkit.createInventory(null, 9*3, e.getInventory().getName() + " " + e.getCurrentItem().getItemMeta().getDisplayName());
-							for(int i = 0; i < 27; i++) {
-								ItemStack is = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 7);
-								ItemMeta im = is.getItemMeta();
-								im.setDisplayName(" ");
-								is.setItemMeta(im);
-								delete.setItem(i, is);
-							}
-							ItemStack is1 = new ItemStack(Material.BARRIER);
-							ItemMeta im1 = is1.getItemMeta();
-							im1.setDisplayName("§4Spawnpunkt löschen");
-							List<String> warning = new ArrayList<>();
-							warning.add("§cAchtung, dieser Vorgang kann nicht rückgängig gemacht werden");
-							im1.setLore(warning);
-							is1.setItemMeta(im1);
-							delete.setItem(13, is1);
-							
-							delete.setItem(3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(4, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(5, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(12, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(14, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(21, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(22, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							delete.setItem(23, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
-							
-							for(int i = 0; i < 27; i++) {
-								if(!delete.getItem(i).hasItemMeta()) {
-									ItemMeta im = delete.getItem(i).getItemMeta();
-									im.setDisplayName(" ");
-									delete.getItem(i).setItemMeta(im);
-								}
-							}
-							
-							p.openInventory(delete);
-							
-						} else {
-							String[] arg = Configs.worldsConfig.getString("Worlds." + e.getInventory().getName().replaceAll("§6", "") + ".Spawns." + e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§5", "") + ".Location").split(",");
-							double[] parsed = new double[3];
-							for (int a = 0; a < 3; a++) {
-							    parsed[a] = Double.parseDouble(arg[a+1]);
-							}
-							if(Bukkit.getWorld("worlds/" + arg[0]) != null) {
-								Location location = new Location(Bukkit.getWorld("worlds/" + arg[0]), parsed[0], parsed[1], parsed[2]);
-								p.teleport(location);
-							} else {
-								p.closeInventory();
-								p.sendMessage(Vars.pr + "§6Welt wird geladen...");
-								Bukkit.getScheduler().runTask(Main.getPlugin(), new Runnable() {
-									public void run() {
-										new WorldCreator("worlds/" + arg[0]).createWorld();
-										Location location = new Location(Bukkit.getWorld("worlds/" + arg[0]), parsed[0], parsed[1], parsed[2]);
-										p.teleport(location);
-									}
-								});
-							}
-						}
-					} else if(e.getInventory().getName().split(" ").length > 1 && Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(e.getInventory().getName().replaceAll("§c", "").substring(0, e.getInventory().getName().replaceAll("§c", "").indexOf(' ')))) {
-						e.setCancelled(true);
-						String worldName = e.getInventory().getName().replaceAll("§c", "").substring(0, e.getInventory().getName().replaceAll("§c", "").indexOf(' '));
-						if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§4Welt löschen")) {
-							if(Configs.worldsConfig.getString("Spawn.World") != null) {
-								if(!Configs.worldsConfig.getString("Spawn.World").equals("world/" + worldName)) {
-									p.closeInventory();
-									for(Player all : Bukkit.getOnlinePlayers()) {
-										if(all.getWorld().getName().equals("worlds/" + worldName)) {
-											World w = Bukkit.getWorld(Configs.worldsConfig.getString("Spawn.World"));
-											Double x = Configs.worldsConfig.getDouble("Spawn.X");
-											Double y = Configs.worldsConfig.getDouble("Spawn.Y");
-											Double z = Configs.worldsConfig.getDouble("Spawn.Z");
-											Location location = new Location(w, x, y, z);
-											all.teleport(location);
-											all.sendMessage(Vars.pr + "§6Die Welt in der du dich befandest wurde gelöscht");
-										}
-									}
-									p.sendMessage(Vars.pr + "§6Welt wird gelöscht...");
-									Configs.worldsConfig.set("Worlds." + worldName, null);
-									Configs.saveConfiguration();
-									
-									if(Bukkit.getWorld("worlds/" + worldName) != null) {
-										Bukkit.unloadWorld("worlds/" + worldName, false);
-									}
-									try {
-										FileUtils.deleteDirectory(new File("worlds/" + worldName));
-									} catch (IOException e1) {
-										e1.printStackTrace();
-									}
-									p.sendMessage(Vars.pr + "§aWelt erfolgreich gelöscht");
-								} else {
-									p.sendMessage(Vars.pr + "§cDiese Welt kann nicht gelöscht werden, da dort der globale Spawnpunkt gesetzt ist");
-								}
-							} else {
-								p.sendMessage(Vars.pr + "§cEs können keine Welten gelöscht werden, da kein globaler Spawnpunkt erstellt wurde");
-								
-							}
-						}
-					} else if(e.getInventory().getName().split(" ").length > 1 && Configs.worldsConfig.getConfigurationSection("Worlds").getKeys(false).contains(e.getInventory().getName().replaceAll("§6", "").substring(0, e.getInventory().getName().replaceAll("§6", "").indexOf(' ')))) {
-						String worldName = e.getInventory().getName().replaceAll("§6", "").substring(0, e.getInventory().getName().replaceAll("§6", "").indexOf(' '));
-						if(Configs.worldsConfig.getConfigurationSection("Worlds." + worldName + ".Spawns").getKeys(false).contains(e.getInventory().getName().replaceAll("§6" + worldName + " ", "").replaceAll("§5", ""))) {
-							String spawnName = e.getInventory().getName().replaceAll("§6" + worldName + " ", "").replaceAll("§5", "");
-							e.setCancelled(true);
-							if(e.getCurrentItem().getItemMeta().getDisplayName().equals("§4Spawnpunkt löschen")) {
-								p.closeInventory();
-								Configs.worldsConfig.set("Worlds." + worldName + ".Spawns." + spawnName, null);
-								p.sendMessage(Vars.pr + "§aSpawnpunkt erfolgreich gelöscht");
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    @EventHandler
+    public void onInvClick(InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player p)) return;
+        if (e.getClickedInventory() == null) return;
+        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
+
+        String title = e.getView().getTitle();
+
+        if (title.equals(Vars.INV_BLOCKS) || title.equals(Vars.INV_TOOLS)) {
+            e.setCancelled(true);
+            p.getInventory().addItem(e.getCurrentItem().clone());
+            return;
+        }
+
+        if (title.equals(Vars.INV_WORLDS)) {
+            handleWorldsInventory(e, p);
+            return;
+        }
+
+        if (title.equals(Vars.INV_CREATE_WORLD)) {
+            handleCreateWorldInventory(e, p);
+            return;
+        }
+
+        // Spawn-point list for a world:  "Â§6<worldName>"
+        if (title.startsWith(ChatColor.GOLD.toString())) {
+            String worldName = ChatColor.stripColor(title);
+            if (isKnownWorld(worldName)) {
+                handleSpawnListInventory(e, p, worldName);
+                return;
+            }
+        }
+
+        // Delete-world confirmation:  "Â§c<worldName> lÃ¶schen"
+        if (title.startsWith(ChatColor.RED.toString())) {
+            String stripped = ChatColor.stripColor(title);
+            if (stripped.endsWith(" lÃ¶schen")) {
+                String worldName = stripped.substring(0, stripped.length() - " lÃ¶schen".length());
+                if (isKnownWorld(worldName)) {
+                    handleDeleteWorldInventory(e, p, worldName);
+                    return;
+                }
+            }
+        }
+
+        // Delete-spawn confirmation:  "Â§6<worldName> Â§5<spawnName>"
+        if (title.startsWith(ChatColor.GOLD.toString()) && title.contains(" ")) {
+            String stripped = ChatColor.stripColor(title);
+            int spaceIdx = stripped.indexOf(' ');
+            if (spaceIdx > 0) {
+                String worldName = stripped.substring(0, spaceIdx);
+                String spawnName = stripped.substring(spaceIdx + 1);
+                if (isKnownWorld(worldName)) {
+                    handleDeleteSpawnInventory(e, p, worldName, spawnName);
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Worlds inventory  (Â§3Welten)
+    // -------------------------------------------------------------------------
+
+    private void handleWorldsInventory(InventoryClickEvent e, Player p) {
+        e.setCancelled(true);
+        if (!e.getCurrentItem().hasItemMeta()) return;
+
+        String displayName = e.getCurrentItem().getItemMeta().getDisplayName();
+
+        if (displayName.equals(ChatColor.RED + "Welt erstellen")) {
+            openCreateWorldMenu(p);
+            return;
+        }
+
+        if (displayName.equals(ChatColor.AQUA + "NÃ¤chste Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
+            int page = InventoryCreator.currentPage.getOrDefault(p, 1);
+            InventoryCreator.currentPage.put(p, page + 1);
+            InventoryCreator.openWorldInventory(p);
+            return;
+        }
+
+        if (displayName.equals(ChatColor.AQUA + "Vorherige Seite") && e.getCurrentItem().getType() == Material.GLOWSTONE_DUST) {
+            int page = InventoryCreator.currentPage.getOrDefault(p, 1);
+            InventoryCreator.currentPage.put(p, page - 1);
+            InventoryCreator.openWorldInventory(p);
+            return;
+        }
+
+        String worldName = ChatColor.stripColor(displayName);
+        if (!isKnownWorld(worldName)) return;
+
+        if (e.getAction() == InventoryAction.PICKUP_ALL) {
+            // Left-click: teleport to world (or open spawn list)
+            handleWorldTeleport(p, worldName);
+        } else if (e.getAction() == InventoryAction.PICKUP_HALF
+                && (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin"))) {
+            // Right-click (owner / admin): open delete confirmation
+            openDeleteWorldMenu(p, worldName);
+        }
+    }
+
+    private void handleWorldTeleport(Player p, String worldName) {
+        var spawnsSection = Configs.worldsConfig.getConfigurationSection("Worlds." + worldName + ".Spawns");
+
+        if (spawnsSection == null || spawnsSection.getKeys(false).isEmpty()) {
+            // No custom spawn points â€“ teleport directly to world spawn
+            World world = Bukkit.getWorld("worlds/" + worldName);
+            if (world != null) {
+                p.teleport(world.getSpawnLocation());
+            } else {
+                p.closeInventory();
+                p.sendMessage(Vars.PREFIX + "Â§6Welt wird geladen...");
+                Bukkit.getScheduler().runTask(Main.getPlugin(), () -> {
+                    World loaded = new WorldCreator("worlds/" + worldName).createWorld();
+                    if (loaded != null) p.teleport(loaded.getSpawnLocation());
+                });
+            }
+        } else {
+            // Multiple spawn points â€“ open a spawn-selection inventory
+            openSpawnListMenu(p, worldName);
+        }
+    }
+
+    private void openSpawnListMenu(Player p, String worldName) {
+        Inventory spawnInv = Bukkit.createInventory(null, 9, ChatColor.GOLD + worldName);
+        var spawnsSection = Configs.worldsConfig.getConfigurationSection("Worlds." + worldName + ".Spawns");
+        for (String spawn : spawnsSection.getKeys(false)) {
+            ItemStack is = new ItemStack(Material.ENDER_EYE);
+            ItemMeta im = is.getItemMeta();
+            im.setDisplayName(ChatColor.DARK_PURPLE + spawn);
+            List<String> lore = new ArrayList<>();
+            String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
+            if (locStr != null) {
+                String[] parts = locStr.split(", ");
+                if (parts.length >= 4) {
+                    lore.add(ChatColor.GOLD + "Location" + ChatColor.DARK_GRAY + ": " + ChatColor.YELLOW
+                            + Math.round(Double.parseDouble(parts[1])) + ", "
+                            + Math.round(Double.parseDouble(parts[2])) + ", "
+                            + Math.round(Double.parseDouble(parts[3])));
+                }
+            }
+            if (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin")) {
+                lore.add(ChatColor.RED + "Rechtsklick zum LÃ¶schen");
+            }
+            im.setLore(lore);
+            is.setItemMeta(im);
+            spawnInv.addItem(is);
+        }
+        p.openInventory(spawnInv);
+    }
+
+    private void openDeleteWorldMenu(Player p, String worldName) {
+        Inventory del = Bukkit.createInventory(null, 9 * 3,
+                ChatColor.RED + worldName + " lÃ¶schen");
+        for (int i = 0; i < 27; i++) del.setItem(i, grayPane());
+
+        // Surround slot 13 with red panes
+        for (int s : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) {
+            del.setItem(s, redPane());
+        }
+
+        ItemStack barrier = new ItemStack(Material.BARRIER);
+        ItemMeta bm = barrier.getItemMeta();
+        bm.setDisplayName(ChatColor.DARK_RED + "Welt lÃ¶schen");
+        bm.setLore(List.of(ChatColor.RED + "Achtung, dieser Vorgang kann nicht rÃ¼ckgÃ¤ngig gemacht werden"));
+        barrier.setItemMeta(bm);
+        del.setItem(13, barrier);
+
+        p.openInventory(del);
+    }
+
+    private void openCreateWorldMenu(Player p) {
+        Inventory inv = Bukkit.createInventory(null, 3 * 9, Vars.INV_CREATE_WORLD);
+
+        // Void column (slots 0,9,18 border + slot 10 icon)
+        for (int s : new int[]{0, 1, 2, 9, 11, 18, 19, 20}) inv.setItem(s, grayPane());
+        ItemStack void_ = new ItemStack(Material.WHITE_STAINED_GLASS);
+        ItemMeta vm = void_.getItemMeta(); vm.setDisplayName(ChatColor.GRAY + "Void"); void_.setItemMeta(vm);
+        inv.setItem(10, void_);
+
+        // Flat column
+        for (int s : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) inv.setItem(s, lightBluePane());
+        ItemStack flat = new ItemStack(Material.GRASS_BLOCK);
+        ItemMeta fm = flat.getItemMeta(); fm.setDisplayName(ChatColor.AQUA + "Flat"); flat.setItemMeta(fm);
+        inv.setItem(13, flat);
+
+        // Normal column
+        for (int s : new int[]{6, 7, 8, 15, 17, 24, 25, 26}) inv.setItem(s, limePane());
+        ItemStack normal = new ItemStack(Material.OAK_SAPLING);
+        ItemMeta nm = normal.getItemMeta(); nm.setDisplayName(ChatColor.GREEN + "Normal"); normal.setItemMeta(nm);
+        inv.setItem(16, normal);
+
+        p.openInventory(inv);
+    }
+
+    // -------------------------------------------------------------------------
+    // "Welt erstellen" inventory
+    // -------------------------------------------------------------------------
+
+    private void handleCreateWorldInventory(InventoryClickEvent e, Player p) {
+        e.setCancelled(true);
+        if (!e.getCurrentItem().hasItemMeta()) return;
+
+        String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+        switch (name) {
+            case "Void"   -> { p.closeInventory(); p.sendMessage(Vars.PREFIX + "Â§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen fÃ¼r deine Welt in den Chat ein"); Vars.voidWorldName.add(p); }
+            case "Flat"   -> { p.closeInventory(); p.sendMessage(Vars.PREFIX + "Â§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen fÃ¼r deine Welt in den Chat ein"); Vars.flatWorldName.add(p); }
+            case "Normal" -> { p.closeInventory(); p.sendMessage(Vars.PREFIX + "Â§aBitte nimm ein Item deiner Wahl in die Hand und gib einen Namen fÃ¼r deine Welt in den Chat ein"); Vars.normalWorldName.add(p); }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Spawn-list inventory  (Â§6<worldName>)
+    // -------------------------------------------------------------------------
+
+    private void handleSpawnListInventory(InventoryClickEvent e, Player p, String worldName) {
+        e.setCancelled(true);
+        if (!e.getCurrentItem().hasItemMeta()) return;
+
+        String spawnName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+
+        if (e.getAction() == InventoryAction.PICKUP_HALF
+                && (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin"))) {
+            // Right-click: open delete-spawn confirmation
+            Inventory del = Bukkit.createInventory(null, 9 * 3,
+                    ChatColor.GOLD + worldName + " " + ChatColor.DARK_PURPLE + spawnName);
+            for (int i = 0; i < 27; i++) del.setItem(i, grayPane());
+            for (int s : new int[]{3, 4, 5, 12, 14, 21, 22, 23}) del.setItem(s, redPane());
+
+            ItemStack barrier = new ItemStack(Material.BARRIER);
+            ItemMeta bm = barrier.getItemMeta();
+            bm.setDisplayName(ChatColor.DARK_RED + "Spawnpunkt lÃ¶schen");
+            bm.setLore(List.of(ChatColor.RED + "Achtung, dieser Vorgang kann nicht rÃ¼ckgÃ¤ngig gemacht werden"));
+            barrier.setItemMeta(bm);
+            del.setItem(13, barrier);
+            p.openInventory(del);
+        } else {
+            // Left-click: teleport to spawn point
+            String locStr = Configs.worldsConfig.getString("Worlds." + worldName + ".Spawns." + spawnName + ".Location");
+            if (locStr == null) return;
+            String[] parts = locStr.split(", ");
+            if (parts.length < 4) return;
+            double x = Double.parseDouble(parts[1]);
+            double y = Double.parseDouble(parts[2]);
+            double z = Double.parseDouble(parts[3]);
+
+            World world = Bukkit.getWorld("worlds/" + parts[0]);
+            if (world != null) {
+                p.teleport(new Location(world, x, y, z));
+            } else {
+                p.closeInventory();
+                p.sendMessage(Vars.PREFIX + "Â§6Welt wird geladen...");
+                Bukkit.getScheduler().runTask(Main.getPlugin(), () -> {
+                    World loaded = new WorldCreator("worlds/" + parts[0]).createWorld();
+                    if (loaded != null) p.teleport(new Location(loaded, x, y, z));
+                });
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Delete-world confirmation inventory
+    // -------------------------------------------------------------------------
+
+    private void handleDeleteWorldInventory(InventoryClickEvent e, Player p, String worldName) {
+        e.setCancelled(true);
+        if (!e.getCurrentItem().hasItemMeta()) return;
+        if (!ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Welt lÃ¶schen")) return;
+
+        String spawnWorld = Configs.worldsConfig.getString("Spawn.World");
+        if (spawnWorld != null && spawnWorld.equals("worlds/" + worldName)) {
+            p.sendMessage(Vars.PREFIX + "Â§cDiese Welt kann nicht gelÃ¶scht werden, da dort der globale Spawnpunkt gesetzt ist");
+            return;
+        }
+        if (spawnWorld == null) {
+            p.sendMessage(Vars.PREFIX + "Â§cEs kÃ¶nnen keine Welten gelÃ¶scht werden, da kein globaler Spawnpunkt erstellt wurde");
+            return;
+        }
+
+        p.closeInventory();
+
+        // Kick all players currently in the world back to spawn
+        World spawnW = Bukkit.getWorld(spawnWorld);
+        if (spawnW != null) {
+            double sx = Configs.worldsConfig.getDouble("Spawn.X");
+            double sy = Configs.worldsConfig.getDouble("Spawn.Y");
+            double sz = Configs.worldsConfig.getDouble("Spawn.Z");
+            Location spawnLoc = new Location(spawnW, sx, sy, sz);
+            World target = Bukkit.getWorld("worlds/" + worldName);
+            if (target != null) {
+                for (Player other : target.getPlayers()) {
+                    other.teleport(spawnLoc);
+                    other.sendMessage(Vars.PREFIX + "Â§6Die Welt in der du dich befandest wurde gelÃ¶scht");
+                }
+            }
+        }
+
+        p.sendMessage(Vars.PREFIX + "Â§6Welt wird gelÃ¶scht...");
+        Configs.worldsConfig.set("Worlds." + worldName, null);
+        Configs.saveConfiguration();
+
+        if (Bukkit.getWorld("worlds/" + worldName) != null) {
+            Bukkit.unloadWorld("worlds/" + worldName, false);
+        }
+
+        try {
+            deleteDirectory(new File("worlds/" + worldName));
+            p.sendMessage(Vars.PREFIX + "Â§aWelt erfolgreich gelÃ¶scht");
+        } catch (IOException ex) {
+            Main.getPlugin().getLogger().severe("Failed to delete world directory: " + ex.getMessage());
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Delete-spawn confirmation inventory
+    // -------------------------------------------------------------------------
+
+    private void handleDeleteSpawnInventory(InventoryClickEvent e, Player p, String worldName, String spawnName) {
+        e.setCancelled(true);
+        if (!e.getCurrentItem().hasItemMeta()) return;
+        if (!ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Spawnpunkt lÃ¶schen")) return;
+
+        p.closeInventory();
+        Configs.worldsConfig.set("Worlds." + worldName + ".Spawns." + spawnName, null);
+        Configs.saveConfiguration();
+        p.sendMessage(Vars.PREFIX + "Â§aSpawnpunkt erfolgreich gelÃ¶scht");
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    private boolean isKnownWorld(String name) {
+        var section = Configs.worldsConfig.getConfigurationSection("Worlds");
+        return section != null && section.getKeys(false).contains(name);
+    }
+
+    private static ItemStack grayPane() {
+        ItemStack is = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta im = is.getItemMeta(); im.setDisplayName(" "); is.setItemMeta(im);
+        return is;
+    }
+
+    private static ItemStack redPane() {
+        ItemStack is = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemMeta im = is.getItemMeta(); im.setDisplayName(" "); is.setItemMeta(im);
+        return is;
+    }
+
+    private static ItemStack lightBluePane() {
+        ItemStack is = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+        ItemMeta im = is.getItemMeta(); im.setDisplayName(" "); is.setItemMeta(im);
+        return is;
+    }
+
+    private static ItemStack limePane() {
+        ItemStack is = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+        ItemMeta im = is.getItemMeta(); im.setDisplayName(" "); is.setItemMeta(im);
+        return is;
+    }
+
+    /** Recursively deletes a directory using Java NIO. */
+    private static void deleteDirectory(File dir) throws IOException {
+        Path path = dir.toPath();
+        if (!Files.exists(path)) return;
+        try (var stream = Files.walk(path)) {
+            stream.sorted(Comparator.reverseOrder())
+                  .map(Path::toFile)
+                  .forEach(File::delete);
+        }
+    }
 }

@@ -8,17 +8,14 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class HangingBreakByEntity implements Listener {
-	@EventHandler
-	public void onHangingBreakByEntity(HangingBreakByEntityEvent e) {
-		if(e.getRemover() instanceof Player) {
-			Player p = (Player) e.getRemover();
-			if(!p.hasPermission("bs.admin")) {
-				if(!Vars.isTrusted(p, p.getWorld().getName())) {
-					if(!Vars.isOwner(p, p.getWorld().getName())) {
-						e.setCancelled(true);
-					}
-				}
-			}
-		}
-	}
+
+    @EventHandler
+    public void onHangingBreakByEntity(HangingBreakByEntityEvent e) {
+        if (!(e.getRemover() instanceof Player p)) return;
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package de.theniclas.bauplugin.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -14,40 +15,34 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDuntrust implements CommandExecutor {
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("untrust")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.worlds")) {
-					if(args.length >= 1) {
-						if(!Vars.isOwner(p, p.getWorld().getName()) || p.hasPermission("bs.admin")) {
-							OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-							if(Vars.isTrusted(target, p.getWorld().getName())) {
-								ArrayList<String> trusted = new ArrayList<>();
-								for(String uuid : Configs.worldsConfig.getStringList("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Trusted")) {
-									trusted.add(uuid);
-								}
-								trusted.remove(target.getUniqueId().toString());
-								Configs.worldsConfig.set("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Trusted", trusted);
-								p.sendMessage(Vars.pr + "§aDu hast §e" + target.getName() + " §adie Rechte entzogen" );
-								Configs.saveConfiguration();
-								trusted.clear();
-							} else {
-								p.sendMessage(Vars.pr + "§cDieser Spieler hat keine Baurechte");
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cDu musst dich in deiner eigenen Welt befinden");
-						}
-					} else {
-						p.sendMessage(Vars.pr + "§cWem sollen seine Rechte entzogen werden?");
-					}
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		}		
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NO_PERM); return false; }
+
+        if (args.length < 1) {
+            p.sendMessage(Vars.PREFIX + "Â§cWem sollen seine Rechte entzogen werden?");
+            return false;
+        }
+
+        if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
+            p.sendMessage(Vars.PREFIX + "Â§cDu musst dich in deiner eigenen Welt befinden");
+            return false;
+        }
+
+        @SuppressWarnings("deprecation")
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if (!Vars.isTrusted(target, p.getWorld().getName())) {
+            p.sendMessage(Vars.PREFIX + "Â§cDieser Spieler hat keine Baurechte");
+            return false;
+        }
+
+        String worldKey = Vars.stripWorldsPrefix(p.getWorld().getName());
+        List<String> trusted = new ArrayList<>(Configs.worldsConfig.getStringList("Worlds." + worldKey + ".Trusted"));
+        trusted.remove(target.getUniqueId().toString());
+        Configs.worldsConfig.set("Worlds." + worldKey + ".Trusted", trusted);
+        Configs.saveConfiguration();
+        p.sendMessage(Vars.PREFIX + "Â§aDu hast Â§e" + target.getName() + " Â§adie Rechte entzogen");
+        return false;
+    }
 }

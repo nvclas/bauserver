@@ -1,6 +1,7 @@
 package de.theniclas.bauplugin.events;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,103 +11,101 @@ import de.theniclas.bauplugin.utils.Configs;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class PlayerCommandPreprocess implements Listener {
-	
-	@EventHandler
-	public void onCommand(PlayerCommandPreprocessEvent e) {
-		Player p = e.getPlayer();
-		if(e.getMessage().toLowerCase().startsWith("/help")) {
-			e.setCancelled(true);
-			
-			p.sendMessage("§e-------§6Verfügbare Befehle§e-------");
-			p.sendMessage("§6/fly §7- §eDe- und aktiviere das Fliegen");
-			p.sendMessage("§6/tpa §7- §eSende eine Teleportanfrage an einen Spieler");
-		
-			if(p.hasPermission("bs.gm")) {
-				p.sendMessage("§6/gm §7- §eÄndere deinen Spielmodus");
-			}
-			
-			if(p.hasPermission("bs.tp")) {
-				p.sendMessage("§6/tp §7- §eTeleportiere dich zu Spielern");
-			}
-			
-			if(p.hasPermission("bs.speed")) {
-				p.sendMessage("§6/speed §7- §eÄndere deine Flug- und Laufgeschwindigkeit");
-			}
-			
-			if(p.hasPermission("bs.blocks")) {
-				p.sendMessage("§6/blocks §7- §eÖffne eine Übersicht von Spezialblöcken");
-			}
-			
-			if(p.hasPermission("bs.tools")) {
-				p.sendMessage("§6/tools §7- §eÖffne eine Übersicht von Bautools");
-			}
-			
-			if(p.hasPermission("bs.worlds")) {
-				p.sendMessage("§6/worlds §7- §eÖffne das Weltenmenu");
-				p.sendMessage("§6/addspawn §7- §eErstelle einen neuen Spawnpunkt");
-				p.sendMessage("§6/trust §7- §eGib einem Spieler Baurechte in deiner Welt");
-				p.sendMessage("§6/untrust §7- §eEntziehe einem Spieler Baurechte in deiner Welt");
-				p.sendMessage("§6/wkick §7- §eKicke einen Spieler aus deiner Welt");
-				p.sendMessage("§6/prepare §7- §eBereite eine Welt vor");
-				if(Bukkit.getPluginManager().getPlugin("Levels") != null) {
-					p.sendMessage("§6/level §7- §eLasse dir dein Level und deine XP anzeigen");
-				}
-			}
-			
-			if(p.hasPermission("bs.admin")) {
-				p.sendMessage("§6/visibility §7- §eMache nur eigene Welten sichtbar");
-				p.sendMessage("§6/worldlock §7- §eBlende eine Welt aus dem Welteninventar aus");
-				p.sendMessage("§6/setowner §7- §eÄndere den Besitzer einer Welt");
-				if(Bukkit.getPluginManager().getPlugin("Levels") != null) {
-					p.sendMessage("§6/unlock §7- §eSchalte einen Spieler frei");
-					p.sendMessage("§6/lock §7- §eSperre einen Spieler");
-				}
-			}
-			
-			p.sendMessage("§e-------------------------------");
-			
-		}
-		
-		if(e.getMessage().toLowerCase().startsWith("/weather off")) {
-			e.setCancelled(true);
-			if(Vars.isTrusted(p, p.getWorld().getName()) || Vars.isOwner(p, p.getWorld().getName()) || p.hasPermission("bs.admin")) {
-				Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Weather", false);
-				Configs.saveConfiguration();
-				p.sendMessage(Vars.pr + "§aWetteränderungen wurden für diese Welt §edeaktiviert");
-			} else {
-				p.sendMessage(Vars.pr + "§cDu hast hier keine Rechte :(");
-			}
-		} else if(e.getMessage().toLowerCase().startsWith("/weather on")) {
-			e.setCancelled(true);
-			if(Vars.isTrusted(p, p.getWorld().getName()) || Vars.isOwner(p, p.getWorld().getName()) || p.hasPermission("bs.admin")) {
-				Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Weather", true);
-				Configs.saveConfiguration();
-				p.sendMessage(Vars.pr + "§aWetteränderungen wurden für diese Welt §eaktiviert");
-			} else {
-				p.sendMessage(Vars.pr + "§cDu hast hier keine Rechte :(");
-			}
-		}
-		
-		if(e.getMessage().toLowerCase().startsWith("/abu ") || e.getMessage().equalsIgnoreCase("/abu")) {
-			if(!Vars.isOwner(p, p.getWorld().getName()) && !Vars.isTrusted(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
-				e.setCancelled(true);
-				p.sendMessage(Vars.pr + "§cDu hast hier keine Rechte :(");
-			}
-		}
-		
-		if(e.getMessage().toLowerCase().startsWith("/tp ") || e.getMessage().equalsIgnoreCase("/tp")) {
-			String[] args = e.getMessage().toLowerCase().split(" ");
-			if(args.length == 2 && p.hasPermission("bs.tp")) {
-				e.setCancelled(true);
-				Player target = Bukkit.getPlayer(args[1]);
-				if(target != null) {
-					p.teleport(target);
-					p.sendMessage(Vars.pr + "§aDu wurdest zu §e" + target.getName() + " §ateleportiert");
-				} else {
-					p.sendMessage(Vars.pr + "§cDieser Spieler ist nicht online");
-				}
-			}
-		}
-		
-	}
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        Player p = e.getPlayer();
+        String msg = e.getMessage().toLowerCase();
+
+        // Custom /help
+        if (msg.startsWith("/help")) {
+            e.setCancelled(true);
+            sendHelp(p);
+            return;
+        }
+
+        // /weather off|on intercepted so world owners can toggle it without needing OP
+        if (msg.startsWith("/weather off")) {
+            e.setCancelled(true);
+            if (Vars.isTrusted(p, p.getWorld().getName())
+                    || Vars.isOwner(p, p.getWorld().getName())
+                    || p.hasPermission("bs.admin")) {
+                p.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+                Configs.worldsConfig.set("Worlds." + Vars.stripWorldsPrefix(p.getWorld().getName()) + ".Properties.Weather", false);
+                Configs.saveConfiguration();
+                p.sendMessage(Vars.PREFIX + "Â§aWetterÃ¤nderungen wurden fÃ¼r diese Welt Â§edeaktiviert");
+            } else {
+                p.sendMessage(Vars.PREFIX + "Â§cDu hast hier keine Rechte :(");
+            }
+            return;
+        }
+
+        if (msg.startsWith("/weather on")) {
+            e.setCancelled(true);
+            if (Vars.isTrusted(p, p.getWorld().getName())
+                    || Vars.isOwner(p, p.getWorld().getName())
+                    || p.hasPermission("bs.admin")) {
+                p.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, true);
+                Configs.worldsConfig.set("Worlds." + Vars.stripWorldsPrefix(p.getWorld().getName()) + ".Properties.Weather", true);
+                Configs.saveConfiguration();
+                p.sendMessage(Vars.PREFIX + "Â§aWetterÃ¤nderungen wurden fÃ¼r diese Welt Â§eaktiviert");
+            } else {
+                p.sendMessage(Vars.PREFIX + "Â§cDu hast hier keine Rechte :(");
+            }
+            return;
+        }
+
+        // Protect WorldEdit undo/redo (/abu) in worlds where the player has no rights
+        if (msg.startsWith("/abu")) {
+            if (!Vars.isOwner(p, p.getWorld().getName())
+                    && !Vars.isTrusted(p, p.getWorld().getName())
+                    && !p.hasPermission("bs.admin")) {
+                e.setCancelled(true);
+                p.sendMessage(Vars.PREFIX + "Â§cDu hast hier keine Rechte :(");
+            }
+            return;
+        }
+
+        // Simple /tp that respects the bs.tp permission
+        String[] args = msg.split(" ");
+        if (args[0].equals("/tp") && args.length == 2 && p.hasPermission("bs.tp")) {
+            e.setCancelled(true);
+            Player target = Bukkit.getPlayer(args[1]);
+            if (target != null) {
+                p.teleport(target);
+                p.sendMessage(Vars.PREFIX + "Â§aDu wurdest zu Â§e" + target.getName() + " Â§ateleportiert");
+            } else {
+                p.sendMessage(Vars.PREFIX + "Â§cDieser Spieler ist nicht online");
+            }
+        }
+    }
+
+    private void sendHelp(Player p) {
+        p.sendMessage("Â§e-------Â§6VerfÃ¼gbare BefehleÂ§e-------");
+        p.sendMessage("Â§6/fly Â§7- Â§eAktiviere / deaktiviere das Fliegen");
+        p.sendMessage("Â§6/tpa Â§7- Â§eSende eine Teleportanfrage an einen Spieler");
+
+        if (p.hasPermission("bs.gm"))    p.sendMessage("Â§6/gm Â§7- Â§eÃ„ndere deinen Spielmodus");
+        if (p.hasPermission("bs.tp"))    p.sendMessage("Â§6/tp Â§7- Â§eTeleportiere dich zu Spielern");
+        if (p.hasPermission("bs.speed")) p.sendMessage("Â§6/speed Â§7- Â§eÃ„ndere deine Flug- und Laufgeschwindigkeit");
+        if (p.hasPermission("bs.blocks"))p.sendMessage("Â§6/blocks Â§7- Â§eÃ–ffne eine Ãœbersicht von SpezialblÃ¶cken");
+        if (p.hasPermission("bs.tools")) p.sendMessage("Â§6/tools Â§7- Â§eÃ–ffne eine Ãœbersicht von Bautools");
+
+        if (p.hasPermission("bs.worlds")) {
+            p.sendMessage("Â§6/worlds Â§7- Â§eÃ–ffne das WeltenmenÃ¼");
+            p.sendMessage("Â§6/addspawn Â§7- Â§eErstelle einen neuen Spawnpunkt");
+            p.sendMessage("Â§6/trust Â§7- Â§eGib einem Spieler Baurechte in deiner Welt");
+            p.sendMessage("Â§6/untrust Â§7- Â§eEntziehe einem Spieler Baurechte in deiner Welt");
+            p.sendMessage("Â§6/wkick Â§7- Â§eKicke einen Spieler aus deiner Welt");
+            p.sendMessage("Â§6/prepare Â§7- Â§eBereite eine Welt vor");
+        }
+
+        if (p.hasPermission("bs.admin")) {
+            p.sendMessage("Â§6/visibility Â§7- Â§eMache nur eigene Welten sichtbar");
+            p.sendMessage("Â§6/worldlock Â§7- Â§eBlende eine Welt aus dem Welteninventar aus");
+            p.sendMessage("Â§6/setowner Â§7- Â§eÃ„ndere den Besitzer einer Welt");
+        }
+
+        p.sendMessage("Â§e-------------------------------");
+    }
 }

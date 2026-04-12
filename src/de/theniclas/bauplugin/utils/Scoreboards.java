@@ -3,41 +3,43 @@ package de.theniclas.bauplugin.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 public class Scoreboards {
-	
-	private static Scoreboard sb;
 
+    private static Scoreboard sb;
+
+    /** (Re)creates the scoreboard teams and assigns all online players. */
     public static void setScoreboard() {
-       
         sb = Bukkit.getScoreboardManager().getNewScoreboard();
-       
+
         sb.registerNewTeam("0000Admin");
         sb.registerNewTeam("0001BuilderPlus");
         sb.registerNewTeam("0005Builder");
         sb.registerNewTeam("9999Gast");
-       
-        for(Player all : Bukkit.getOnlinePlayers()) {
-            setTeams(all);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            assignTeam(player);
         }
-       
     }
-   
-    @SuppressWarnings("deprecation")
-    private static void setTeams(Player p) {
-        String team = "";
-        if(p.hasPermission("bs.admin")) {
-            team = "0000Admin";
-        } else if(p.hasPermission("bs.builderplus")) {
-        	team = "0001BuilderPlus";
-        } else if(p.hasPermission("bs.builder")) {
-            team = "0005Builder";
+
+    /** Assigns {@code p} to the appropriate team on the shared scoreboard. */
+    public static void assignTeam(Player p) {
+        String teamName;
+        if (p.hasPermission("bs.admin")) {
+            teamName = "0000Admin";
+        } else if (p.hasPermission("bs.builderplus")) {
+            teamName = "0001BuilderPlus";
+        } else if (p.hasPermission("bs.builder")) {
+            teamName = "0005Builder";
         } else {
-            team = "9999Gast";
+            teamName = "9999Gast";
         }
-       
-        sb.getTeam(team).addPlayer(p);
+
+        Team team = sb.getTeam(teamName);
+        if (team != null) {
+            team.addEntry(p.getName());
+        }
         p.setScoreboard(sb);
-       
     }
 }

@@ -8,16 +8,14 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class PlayerInteractAtEntity implements Listener {
-	@EventHandler
-	public void onEntityInteractaction(PlayerInteractAtEntityEvent e) {
-		
-		Player p = e.getPlayer();
-		if(!p.hasPermission("bs.admin")) {
-			if(!Vars.isTrusted(p, p.getWorld().getName())) {
-				if(!Vars.isOwner(p, p.getWorld().getName())) {
-					e.setCancelled(true);
-				}
-			}
-		}
-	}
+
+    @EventHandler
+    public void onEntityInteract(PlayerInteractAtEntityEvent e) {
+        Player p = e.getPlayer();
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+        }
+    }
 }

@@ -10,37 +10,39 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDaddspawn implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("addspawn")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.worlds")) {
-					if(args.length >= 1) {
-						if(Vars.isOwner(p, p.getWorld().getName()) || p.hasPermission("bs.admin")) {
-							if(Configs.worldsConfig.get("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Spawns") == null || Configs.worldsConfig.getConfigurationSection("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Spawns").getKeys(false).size() < 9) {
-								if(Configs.worldsConfig.get("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Spawns") == null || !Configs.worldsConfig.getConfigurationSection("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Spawns").getKeys(false).contains(args[0])) {
-									Configs.worldsConfig.set("Worlds." + p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ".Spawns." + args[0] + ".Location", p.getLocation().getWorld().getName().replaceAll("worlds/", "") + ", " + String.valueOf(p.getLocation().getX()) + ", " + String.valueOf(p.getLocation().getY()) + ", " + String.valueOf(p.getLocation().getZ()));
-									Configs.saveConfiguration();
-									p.sendMessage(Vars.pr + "§aSpawnpunkt §e" + args[0] + " §aerstellt");
-								} else {
-									p.sendMessage(Vars.pr + "§cDiesen Spawnpunktnamen gibt es bereits für diese Welt");
-								}
-							} else {
-								p.sendMessage(Vars.pr + "§cEs existieren bereits zu viele Spawnpunkte für diese Welt, lösche sie mithilfe von §e/worlds");
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cDu musst dich in deiner eigenen Welt befinden");
-						}
-					} else {
-						p.sendMessage(Vars.pr + "§cWie soll der Spawnpunkt heißen?");
-					}
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        if (args.length < 1) {
+            p.sendMessage(Vars.PREFIX + "Â§cWie soll der Spawnpunkt heiÃŸen?");
+            return false;
+        }
+
+        if (!Vars.isOwner(p, p.getWorld().getName()) && !p.hasPermission("bs.admin")) {
+            p.sendMessage(Vars.PREFIX + "Â§cDu musst dich in deiner eigenen Welt befinden");
+            return false;
+        }
+
+        String worldKey = Vars.stripWorldsPrefix(p.getWorld().getName());
+        String spawnPath = "Worlds." + worldKey + ".Spawns";
+        var spawnsSection = Configs.worldsConfig.getConfigurationSection(spawnPath);
+
+        if (spawnsSection != null && spawnsSection.getKeys(false).size() >= 9) {
+            p.sendMessage(Vars.PREFIX + "Â§cEs existieren bereits zu viele Spawnpunkte fÃ¼r diese Welt, lÃ¶sche sie mithilfe von Â§e/worlds");
+            return false;
+        }
+
+        if (spawnsSection != null && spawnsSection.getKeys(false).contains(args[0])) {
+            p.sendMessage(Vars.PREFIX + "Â§cDiesen Spawnpunktnamen gibt es bereits fÃ¼r diese Welt");
+            return false;
+        }
+
+        String loc = worldKey + ", " + p.getLocation().getX() + ", " + p.getLocation().getY() + ", " + p.getLocation().getZ();
+        Configs.worldsConfig.set(spawnPath + "." + args[0] + ".Location", loc);
+        Configs.saveConfiguration();
+        p.sendMessage(Vars.PREFIX + "Â§aSpawnpunkt Â§e" + args[0] + " Â§aerstellt");
+        return false;
+    }
 }

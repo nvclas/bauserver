@@ -10,35 +10,38 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDtpaccept implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("tpaccept")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(args.length >= 1) {
-					Player target = Bukkit.getPlayer(args[0]);
-					if(target != null) {
-						if(Vars.tpa.containsKey(p.getUniqueId().toString())) {
-							if(Vars.tpa.containsValue(target.getUniqueId().toString()) && Vars.tpa.get(p.getUniqueId().toString()).equals(target.getUniqueId().toString())) {
-								target.teleport(p);
-								target.sendMessage(Vars.pr + "§aDeine Anfrage wurde angenommen");
-								p.sendMessage(Vars.pr + "§aDu hast die Anfrage angenommen");
-								Vars.tpa.remove(p.getUniqueId().toString(), target.getUniqueId().toString());
-							} else {
-								p.sendMessage(Vars.pr + "§e" + target.getName() + " §chat dir keine Anfrage gesendet, dafür aber jemand anderes");
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cNiemand will sich zu dir teleportieren :(");
-						}
-					} else {
-						p.sendMessage(Vars.pr + "§cUps, der ist wohl schon offline gegangen");
-					}
-				} else {
-					p.sendMessage(Vars.pr + "§cWessen Anfrage soll denn angenommen werden?");
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
 
+        if (args.length < 1) {
+            p.sendMessage(Vars.PREFIX + "Â§cWessen Anfrage soll denn angenommen werden?");
+            return false;
+        }
+
+        Player requester = Bukkit.getPlayer(args[0]);
+        if (requester == null) {
+            p.sendMessage(Vars.PREFIX + "Â§cUps, der ist wohl schon offline gegangen");
+            return false;
+        }
+
+        String pId         = p.getUniqueId().toString();
+        String requesterId = requester.getUniqueId().toString();
+
+        if (!Vars.tpa.containsKey(pId)) {
+            p.sendMessage(Vars.PREFIX + "Â§cNiemand will sich zu dir teleportieren :(");
+            return false;
+        }
+
+        if (!requesterId.equals(Vars.tpa.get(pId))) {
+            p.sendMessage(Vars.PREFIX + "Â§e" + requester.getName() + " Â§chat dir keine Anfrage gesendet, dafÃ¼r aber jemand anderes");
+            return false;
+        }
+
+        Vars.tpa.remove(pId);
+        requester.teleport(p);
+        requester.sendMessage(Vars.PREFIX + "Â§aDeine Anfrage wurde angenommen");
+        p.sendMessage(Vars.PREFIX + "Â§aDu hast die Anfrage angenommen");
+        return false;
+    }
 }

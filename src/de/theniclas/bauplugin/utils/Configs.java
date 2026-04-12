@@ -9,32 +9,33 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import de.theniclas.bauplugin.main.Main;
 
 public class Configs {
-	
-	public static File worldsFile = new File("plugins/Bauserver", "worlds.yml");
-	public static FileConfiguration worldsConfig = YamlConfiguration.loadConfiguration(worldsFile);
-	
-	public static void loadConfiguration() {
-		File worldsFile = new File("plugins/Bauserver", "worlds.yml");
-		
-		if(!worldsFile.exists()) {
-			Main.getPlugin().getDataFolder().mkdir();
-			try {
-				worldsFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Configs.worldsConfig.set("Visibility", false);
-			saveConfiguration();
-			System.out.println("Weltenconfig erstellt");
-		}
-	}
-	
-	public static void saveConfiguration() {
-		try {
-			worldsConfig.save(worldsFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		worldsConfig = YamlConfiguration.loadConfiguration(worldsFile);
-	}
+
+    private static final File WORLDS_FILE = new File("plugins/Bauserver", "worlds.yml");
+
+    public static FileConfiguration worldsConfig = YamlConfiguration.loadConfiguration(WORLDS_FILE);
+
+    /** Creates the worlds.yml if it does not yet exist, then loads it. */
+    public static void loadConfiguration() {
+        if (!WORLDS_FILE.exists()) {
+            Main.getPlugin().getDataFolder().mkdirs();
+            try {
+                WORLDS_FILE.createNewFile();
+            } catch (IOException e) {
+                Main.getPlugin().getLogger().severe("Could not create worlds.yml: " + e.getMessage());
+            }
+            worldsConfig.set("Visibility", false);
+            saveConfiguration();
+            Main.getPlugin().getLogger().info("worlds.yml created.");
+        }
+    }
+
+    /** Persists the current config to disk and reloads it. */
+    public static void saveConfiguration() {
+        try {
+            worldsConfig.save(WORLDS_FILE);
+        } catch (IOException e) {
+            Main.getPlugin().getLogger().severe("Could not save worlds.yml: " + e.getMessage());
+        }
+        worldsConfig = YamlConfiguration.loadConfiguration(WORLDS_FILE);
+    }
 }

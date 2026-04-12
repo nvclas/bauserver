@@ -8,16 +8,14 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import de.theniclas.bauplugin.utils.Vars;
 
 public class PlayerDropItem implements Listener {
-	@EventHandler
-	public void onItemDrop(PlayerDropItemEvent e) {
-		
-		Player p = e.getPlayer();
-		if(!p.hasPermission("bs.admin")) {
-			if(!Vars.isTrusted(p, p.getWorld().getName())) {
-				if(!Vars.isOwner(p, p.getWorld().getName())) {
-					e.setCancelled(true);
-				}
-			}
-		}
-	}
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent e) {
+        Player p = e.getPlayer();
+        if (!p.hasPermission("bs.admin")
+                && !Vars.isTrusted(p, p.getWorld().getName())
+                && !Vars.isOwner(p, p.getWorld().getName())) {
+            e.setCancelled(true);
+        }
+    }
 }

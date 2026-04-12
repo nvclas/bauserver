@@ -10,24 +10,17 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDworldlock implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("worldlock")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.admin")) {
-					if(Configs.worldsConfig.get("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Locked") == null || Configs.worldsConfig.getBoolean("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Locked") == false) {
-						Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Locked", true);
-						p.sendMessage(Vars.pr + "§aWelt wurde §egesperrt");
-					} else {
-						Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Properties.Locked", false);
-						p.sendMessage(Vars.pr + "§aWelt wurde §eentsperrt");
-					}
-					Configs.saveConfiguration();
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.admin")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        String worldKey = Vars.stripWorldsPrefix(p.getWorld().getName());
+        boolean locked = Configs.worldsConfig.getBoolean("Worlds." + worldKey + ".Properties.Locked");
+        Configs.worldsConfig.set("Worlds." + worldKey + ".Properties.Locked", !locked);
+        Configs.saveConfiguration();
+
+        p.sendMessage(Vars.PREFIX + "Â§aWelt wurde Â§e" + (!locked ? "gesperrt" : "entsperrt"));
+        return false;
+    }
 }

@@ -10,24 +10,19 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDworlds implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("worlds")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.worlds")) {
-					if(!Vars.voidWorldName.contains(p) && !Vars.flatWorldName.contains(p) && !Vars.normalWorldName.contains(p)) {
-						InventoryCreator.currentPage.put(p, 1);
-						InventoryCreator.openWorldInventory(p);
-					} else {
-						p.sendMessage(Vars.pr + "§cDu bist bereits dabei eine Welt zu erstellen");
-						p.sendMessage(Vars.pr + "§cGib \"stop\" oder ähnliche Begriffe zum Abbruch in den Chat ein");
-					}
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.worlds")) { p.sendMessage(Vars.NO_PERM); return false; }
+
+        if (Vars.voidWorldName.contains(p) || Vars.flatWorldName.contains(p) || Vars.normalWorldName.contains(p)) {
+            p.sendMessage(Vars.PREFIX + "Â§cDu bist bereits dabei eine Welt zu erstellen");
+            p.sendMessage(Vars.PREFIX + "Â§cGib 'stop' oder Ã¤hnliche Begriffe zum Abbruch in den Chat ein");
+            return false;
+        }
+
+        InventoryCreator.currentPage.put(p, 1);
+        InventoryCreator.openWorldInventory(p);
+        return false;
+    }
 }

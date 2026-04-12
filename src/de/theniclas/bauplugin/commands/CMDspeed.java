@@ -1,6 +1,5 @@
 package de.theniclas.bauplugin.commands;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,41 +9,40 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDspeed implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("speed")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.speed")) {
-					if(args.length >= 1) {
-						if(NumberUtils.isNumber(args[0])) {
-							if(Float.parseFloat(args[0]) >= 1 && Float.parseFloat(args[0]) <= 10) {
-								if(p.isFlying()) {
-									p.setFlySpeed(Float.parseFloat(args[0]) / 10);
-									p.sendMessage(Vars.pr + "§aDein Fluggeschwindigkeit wurde auf §e" + args[0] + " §agesetzt");
-								} else {
-									p.setWalkSpeed(Float.parseFloat(args[0]) / 10);
-									p.sendMessage(Vars.pr + "§aDein Laufgeschwindigkeit wurde auf §e" + args[0] + " §agesetzt");
-								}
-							} else {
-								p.sendMessage(Vars.pr + "§cÄhm, ich denke zwischen 1 und 10 sollte reichen");
-							}
-						} else {
-							p.sendMessage(Vars.pr + "§cZahlen wären praktisch");
-						}
-					} else {
-						if(p.isFlying()) {
-							p.sendMessage(Vars.pr + "§aDeine Fluggeschwindigkeit beträgt derzeit §e" + p.getFlySpeed() * 10 + " §8(Standard: 1)");
-						} else {
-							p.sendMessage(Vars.pr + "§aDeine Laufgeschwindigkeit beträgt derzeit §e" + p.getWalkSpeed() * 10 + " §8(Standard: 2)");
-						}
-					}
-				} else {
-					p.sendMessage(Vars.noperm);
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.speed")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        if (args.length < 1) {
+            if (p.isFlying()) {
+                p.sendMessage(Vars.PREFIX + "Â§aDeine Fluggeschwindigkeit betrÃ¤gt derzeit Â§e" + (p.getFlySpeed() * 10) + " Â§8(Standard: 1)");
+            } else {
+                p.sendMessage(Vars.PREFIX + "Â§aDeine Laufgeschwindigkeit betrÃ¤gt derzeit Â§e" + (p.getWalkSpeed() * 10) + " Â§8(Standard: 2)");
+            }
+            return false;
+        }
+
+        float value;
+        try {
+            value = Float.parseFloat(args[0]);
+        } catch (NumberFormatException ex) {
+            p.sendMessage(Vars.PREFIX + "Â§cZahlen wÃ¤ren praktisch");
+            return false;
+        }
+
+        if (value < 1 || value > 10) {
+            p.sendMessage(Vars.PREFIX + "Â§cÃ„hm, ich denke zwischen 1 und 10 sollte reichen");
+            return false;
+        }
+
+        if (p.isFlying()) {
+            p.setFlySpeed(value / 10f);
+            p.sendMessage(Vars.PREFIX + "Â§aDeine Fluggeschwindigkeit wurde auf Â§e" + args[0] + " Â§agesetzt");
+        } else {
+            p.setWalkSpeed(value / 10f);
+            p.sendMessage(Vars.PREFIX + "Â§aDeine Laufgeschwindigkeit wurde auf Â§e" + args[0] + " Â§agesetzt");
+        }
+        return false;
+    }
 }

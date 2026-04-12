@@ -12,27 +12,33 @@ import de.theniclas.bauplugin.utils.Vars;
 
 public class CMDsetowner implements CommandExecutor {
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName().equalsIgnoreCase("setowner")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(p.hasPermission("bs.admin")) {
-					if(args.length >= 1) {
-						OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-						if(target.hasPlayedBefore() || target.isOnline()) {
-							if(!target.getName().equals(Configs.worldsConfig.get("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Owner"))) {
-								Configs.worldsConfig.set("Worlds." + p.getWorld().getName().replaceAll("worlds/", "") + ".Owner", target.getUniqueId().toString());
-								p.sendMessage(Vars.pr + "§aDer neue Besitzer dieser Welt ist nun §e" + args[0]);
-								Configs.saveConfiguration();
-							} else p.sendMessage(Vars.pr + "§cDieser Spieler ist bereits der Besitzer dieser Welt");
-						} else p.sendMessage(Vars.pr + "§cDieser Spieler hat noch nie hier gespielt");
-					} else p.sendMessage(Vars.pr + "§cWer soll der neue Besitzer werden?");
-				} else p.sendMessage(Vars.noperm);
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return false;
+        if (!p.hasPermission("bs.admin")) { p.sendMessage(Vars.NO_PERM); return false; }
 
+        if (args.length < 1) {
+            p.sendMessage(Vars.PREFIX + "Â§cWer soll der neue Besitzer werden?");
+            return false;
+        }
+
+        @SuppressWarnings("deprecation") // Bukkit.getOfflinePlayer(String) is the only option without UUID
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if (!target.hasPlayedBefore() && !target.isOnline()) {
+            p.sendMessage(Vars.PREFIX + "Â§cDieser Spieler hat noch nie hier gespielt");
+            return false;
+        }
+
+        String worldKey = Vars.stripWorldsPrefix(p.getWorld().getName());
+        String current  = Configs.worldsConfig.getString("Worlds." + worldKey + ".Owner");
+        if (target.getUniqueId().toString().equals(current)) {
+            p.sendMessage(Vars.PREFIX + "Â§cDieser Spieler ist bereits der Besitzer dieser Welt");
+            return false;
+        }
+
+        Configs.worldsConfig.set("Worlds." + worldKey + ".Owner", target.getUniqueId().toString());
+        Configs.saveConfiguration();
+        p.sendMessage(Vars.PREFIX + "Â§aDer neue Besitzer dieser Welt ist nun Â§e" + target.getName());
+        return false;
+    }
 }
