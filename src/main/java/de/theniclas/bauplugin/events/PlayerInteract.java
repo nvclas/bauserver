@@ -47,8 +47,6 @@ public class PlayerInteract implements Listener {
         if (itemName != null && handleSpecialBlockPlacement(e, p, itemName)) {
             return;
         }
-
-
         Block clicked = e.getClickedBlock();
         Material type = clicked.getType();
         if (type == Material.IRON_TRAPDOOR || type == Material.IRON_DOOR) {

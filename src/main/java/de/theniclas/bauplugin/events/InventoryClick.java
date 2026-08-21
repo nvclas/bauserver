@@ -45,6 +45,8 @@ public class InventoryClick implements Listener {
         InventoryHolder holder = e.getInventory().getHolder();
         if (!(holder instanceof InvHolder ih))
             return;
+        if (e.getClickedInventory() != e.getView().getTopInventory())
+            return;
         String id = ih.getId();
 
         if (id.equals("tools") || id.equals("blocks")) {
@@ -233,10 +235,22 @@ public class InventoryClick implements Listener {
             String locStr = plugin.getBauserverConfig()
                     .getWorldsConfig()
                     .getString("Worlds." + worldName + ".Spawns." + spawn + ".Location");
+            if (locStr == null)
+                continue;
             String[] arg = locStr.split(",");
-            lore.add("Location: " + Math.round(Double.parseDouble(arg[1].trim()))
-                    + ", " + Math.round(Double.parseDouble(arg[2].trim()))
-                    + ", " + Math.round(Double.parseDouble(arg[3].trim())));
+            if (arg.length < 4)
+                continue;
+            double x;
+            double y;
+            double z;
+            try {
+                x = Double.parseDouble(arg[1].trim());
+                y = Double.parseDouble(arg[2].trim());
+                z = Double.parseDouble(arg[3].trim());
+            } catch (NumberFormatException ex) {
+                continue;
+            }
+            lore.add("Location: " + Math.round(x) + ", " + Math.round(y) + ", " + Math.round(z));
             if (Vars.isOwner(p, worldName) || p.hasPermission("bs.admin"))
                 lore.add("Rechtsklick zum Löschen");
             im.setLore(lore);

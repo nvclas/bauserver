@@ -5,10 +5,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.theniclas.bauplugin.utils.Vars;
 import de.theniclas.levels.utils.Data;
 
 public class CMDlevel implements CommandExecutor {
+    private static final String PREFIX = "§8[§9§lTokyo-Build§8] §7";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -16,11 +16,11 @@ public class CMDlevel implements CommandExecutor {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (Data.getConfig().get("Levels." + p.getUniqueId().toString() + ".Level") == null) {
-                    p.sendMessage(Vars.pr + "�cDu hast nicht die M�glichkeit XP zu sammeln");
+                    p.sendMessage(PREFIX + "�cDu hast nicht die M�glichkeit XP zu sammeln");
                 } else {
-                    p.sendMessage(Vars.pr + "�aDu befindest dich derzeit auf �bLevel " + Data.getConfig()
+                    p.sendMessage(PREFIX + "�aDu befindest dich derzeit auf �bLevel " + Data.getConfig()
                             .get("Levels." + p.getUniqueId().toString() + ".Level"));
-                    p.sendMessage(Vars.pr + "�aDeine XP�8: �b" + Data.getConfig()
+                    p.sendMessage(PREFIX + "�aDeine XP�8: �b" + Data.getConfig()
                             .get("Levels." + p.getUniqueId().toString() + ".Xp") + "�8/�b" + Data.getConfig()
                             .get("Levels." + p.getUniqueId().toString() + ".NextLevelXp"));
                 }
