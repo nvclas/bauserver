@@ -10,26 +10,26 @@ import de.theniclas.abu.events.BlockPlace;
 import de.theniclas.abu.utils.Vars;
 
 public class Main extends JavaPlugin {
-	
-	private static Main plugin;
-	
-	public void onEnable() {
-		
-		plugin = this;
-		
-		this.getCommand("abu").setExecutor(new CMDabu());
-		
-		Bukkit.getPluginManager().registerEvents(new BlockPhysics(), this);
-		Bukkit.getPluginManager().registerEvents(new BlockPlace(), this);
-		Bukkit.getPluginManager().registerEvents(new BlockFromTo(), this);
-		
-		Vars.loadConfiguration();
-		
-		System.out.println("AntiBlockUpdate geladen");
-		
-	}
-	
-	public static Main getPlugin() {
-		return plugin;
-	}
+
+    private static Main plugin;
+
+    public static Main getPlugin() {
+        return plugin;
+    }
+
+    public void onEnable() {
+
+        plugin = this;
+
+        this.getCommand("abu").setExecutor(new CMDabu());
+
+        Bukkit.getPluginManager().registerEvents(new BlockPhysics(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockPlace(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockFromTo(), this);
+
+        Vars.loadConfiguration();
+
+        System.out.println("AntiBlockUpdate geladen");
+
+    }
 }

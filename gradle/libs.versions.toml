@@ -1,0 +1,12 @@
+[versions]
+paperweight-userdev = "2.0.0-beta.21"
+paper = "1.21.11-R0.1-SNAPSHOT"
+lombok = "1.18.+"
+runPaper = "2.3.+"
+
+[libraries]
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+
+[plugins]
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight-userdev" }
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }

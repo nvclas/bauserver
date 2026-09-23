@@ -1,0 +1,49 @@
+name: Bauserver
+version: '${version}'
+main: de.theniclas.bauplugin.Bauserver
+api-version: '1.21'
+authors: [ nvclas ]
+description: Build server plugin
+
+commands:
+  gm:
+    description: Change gamemode
+  speed:
+    description: Change speed
+  blocks:
+    description: Open special blocks menu
+  tools:
+    description: Open tools menu
+  fly:
+    description: Toggle flight
+  worlds:
+    description: Open worlds menu
+    aliases: [ w ]
+  trust:
+    description: Trust a player in your world
+  untrust:
+    description: Untrust a player from your world
+  tpa:
+    description: Send a teleport request
+  tpaccept:
+    description: Accept a teleport request
+  ping:
+    description: Check your ping
+  addspawn:
+    description: Add a spawn point
+  globalspawn:
+    description: Set global spawn
+  spawn:
+    description: Teleport to global spawn
+  visibility:
+    description: Toggle world visibility
+  prepare:
+    description: Prepare a world
+  worldlock:
+    description: Lock a world
+  wkick:
+    description: Kick player from world
+  trusted:
+    description: List trusted players
+  setowner:
+    description: Set world owner

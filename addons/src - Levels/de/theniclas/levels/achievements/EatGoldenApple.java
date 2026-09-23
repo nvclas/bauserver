@@ -9,18 +9,18 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import de.theniclas.levels.utils.Methods;
 
 public class EatGoldenApple implements Listener {
-	@EventHandler
-	public void onEatingGoldenApple(PlayerItemConsumeEvent e) {
-		
-		Player p = e.getPlayer();
-		if(!e.isCancelled()) {
-			if(Methods.isUnlocked(p)) {
-				if(e.getItem() != null) {
-					if(e.getItem().getDurability() == 1 && e.getItem().getType() == Material.GOLDEN_APPLE) {
-						Methods.addAchievement(p, "UNLIMITED POWER", 10);
-					}
-				}
-			}				
-		}
-	}
+    @EventHandler
+    public void onEatingGoldenApple(PlayerItemConsumeEvent e) {
+
+        Player p = e.getPlayer();
+        if (!e.isCancelled()) {
+            if (Methods.isUnlocked(p)) {
+                if (e.getItem() != null) {
+                    if (e.getItem().getDurability() == 1 && e.getItem().getType() == Material.GOLDEN_APPLE) {
+                        Methods.addAchievement(p, "UNLIMITED POWER", 10);
+                    }
+                }
+            }
+        }
+    }
 }
